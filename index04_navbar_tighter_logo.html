@@ -1270,17 +1270,17 @@
       const total = (price * rooms * nights).toLocaleString('en-IN');
 
       const msg =
-        `🙏 *Booking Request – Sahyadri Hotels*\n\n` +
-        `🏨 *Hotel:* ${currentHotel.name}\n` +
-        `🏢 *Brand:* ${currentHotel.brand}\n\n` +
-        `📅 *Check-In:*  ${fmt(cin)}\n` +
-        `📅 *Check-Out:* ${fmt(cout)}\n` +
-        `🌙 *Nights:* ${nights}\n\n` +
-        `🛏️ *Rooms:* ${rooms}\n` +
-        `👥 *Guests:* ${guests}\n\n` +
-        `💰 *Price per room/night:* ₹${price.toLocaleString('en-IN')}\n` +
-        `💵 *Estimated Total:* ₹${total}\n\n` +
-        `Please confirm my booking. Thank you! 🙏`;
+        ` *Booking Request – Sahyadri Hotels*\n\n` +
+        ` *Hotel:* ${currentHotel.name}\n` +
+        ` *Brand:* ${currentHotel.brand}\n\n` +
+        ` *Check-In:*  ${fmt(cin)}\n` +
+        ` *Check-Out:* ${fmt(cout)}\n` +
+        ` *Nights:* ${nights}\n\n` +
+        ` *Rooms:* ${rooms}\n` +
+        ` *Guests:* ${guests}\n\n` +
+        ` *Price per room/night:* ₹${price.toLocaleString('en-IN')}\n` +
+        ` *Estimated Total:* ₹${total}\n\n` +
+        `Please confirm my booking. Thank you! `;
 
       const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
       window.open(url, '_blank');
