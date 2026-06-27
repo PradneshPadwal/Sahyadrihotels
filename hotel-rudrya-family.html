@@ -379,16 +379,16 @@ footer strong{color:var(--gold)}
     const cin=document.getElementById('wCheckin')?.value,cout=document.getElementById('wCheckout')?.value;
     const n=getNights(cin,cout),r=wC.rooms,tot=n*r*HOTEL.price;
     document.getElementById('sRooms').textContent=r;
-    document.getElementById('sNights').textContent=n>0?n+(n===1?' night':' nights'):'â€”';
-    document.getElementById('sTotal').textContent=n>0?'₹'+tot.toLocaleString('en-IN'):'â€”';
+    document.getElementById('sNights').textContent=n>0?n+(n===1?' night':' nights'):'—';
+    document.getElementById('sTotal').textContent=n>0?'₹'+tot.toLocaleString('en-IN'):'—';
   }
 
   function syncDates(src){
     const cin=document.getElementById(src+'Checkin')?.value,cout=document.getElementById(src+'Checkout')?.value;
     const n=getNights(cin,cout),r=dC.rooms,tot=n*r*HOTEL.price;
     document.getElementById('dsRooms').textContent=r;
-    document.getElementById('dsNights').textContent=n>0?n+(n===1?' night':' nights'):'â€”';
-    document.getElementById('dsTotal').textContent=n>0?'₹'+tot.toLocaleString('en-IN'):'â€”';
+    document.getElementById('dsNights').textContent=n>0?n+(n===1?' night':' nights'):'—';
+    document.getElementById('dsTotal').textContent=n>0?'₹'+tot.toLocaleString('en-IN'):'—';
   }
 
   function bookWhatsApp(){
@@ -401,7 +401,7 @@ footer strong{color:var(--gold)}
     if(n<=0){alert('Check-out must be after check-in.');return;}
     const fmt=s=>{const d=new Date(s);return d.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'long',year:'numeric'});};
     const tot=(HOTEL.price*rooms*n).toLocaleString('en-IN');
-    const msg=`ðŸ™ *Booking Request — Sahyadri Hotels*\n\nðŸ¨ *Hotel:* ${HOTEL.name}\nðŸ¢ *Brand:* ${HOTEL.brand}\n\nðŸ“… *Check-In:*  ${fmt(cin)}\nðŸ“… *Check-Out:* ${fmt(cout)}\nðŸŒ™ *Nights:* ${n}\n\nðŸ›ï¸ *Rooms:* ${rooms}\nðŸ‘¥ *Guests:* ${guests}\n\nðŸ’° *Price per room/night:* ₹${HOTEL.price.toLocaleString('en-IN')}\nðŸ’µ *Estimated Total:* ₹${tot}\n\nPlease confirm my booking. Thank you! ðŸ™`;
+    const msg=`🙏 *Booking Request — Sahyadri Hotels*\n\n🏨 *Hotel:* ${HOTEL.name}\n🏢 *Brand:* ${HOTEL.brand}\n\n📅 *Check-In:*  ${fmt(cin)}\n📅 *Check-Out:* ${fmt(cout)}\n🌙 *Nights:* ${n}\n\n🛏️ *Rooms:* ${rooms}\n👥 *Guests:* ${guests}\n\n💰 *Price per room/night:* ₹${HOTEL.price.toLocaleString('en-IN')}\n💵 *Estimated Total:* ₹${tot}\n\nPlease confirm my booking. Thank you! 🙏`;
     window.open(`https://wa.me/${HOTEL.waNum}?text=${encodeURIComponent(msg)}`,'_blank');
   }
 
