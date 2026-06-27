@@ -1,0 +1,424 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Rudrya Forest View Room â€“ Sahyadri Hotels</title>
+<meta name="description" content="Book the Rudrya Forest View Room near Bhimashankar Temple. Premium forest-view stay with free Wi-Fi, parking and hot water."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#C9A96E;--gold-light:#E4C98A;--green:#2E5540;--dark-green:#0A1611;--deep-green:#13261E;--cream:#F5EEE3;--cream2:#EDE8DF;--dark:#1a1a1a;--mid:#555;--wa:#25D366}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:#fff;color:var(--dark);overflow-x:hidden}
+a{-webkit-tap-highlight-color:transparent}
+img{max-width:100%;display:block}
+
+/* â”€â”€ NAVBAR â”€â”€ */
+.navbar{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:.9rem 3rem;background:var(--deep-green);border-bottom:1px solid rgba(255,255,255,.08)}
+.nav-back{display:flex;align-items:center;gap:.5rem;color:rgba(255,255,255,.8);text-decoration:none;font-size:.82rem;font-weight:500;letter-spacing:.04em;transition:color .2s}
+.nav-back:hover{color:var(--gold-light)}
+.nav-logo img{height:60px;width:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}
+.nav-book-btn{text-decoration:none;color:var(--gold-light);border:1.5px solid var(--gold);padding:.55rem 1.4rem;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;transition:all .25s}
+.nav-book-btn:hover{background:var(--gold);color:var(--dark-green)}
+
+/* â”€â”€ HERO â”€â”€ */
+.hero{position:relative;height:70vh;min-height:420px;overflow:hidden}
+.hero img{width:100%;height:100%;object-fit:cover;object-position:center}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.82) 0%,rgba(0,0,0,.3) 50%,rgba(0,0,0,.15) 100%)}
+.hero-content{position:absolute;bottom:2.5rem;left:3rem;right:3rem}
+.hero-tag{display:inline-block;background:var(--gold);color:#111;font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;margin-bottom:.75rem}
+.hero-name{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);color:#fff;line-height:1.2;margin-bottom:.4rem}
+.hero-brand{font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+.hero-meta{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.hero-rating{display:flex;align-items:center;gap:.4rem;color:#fff;font-size:.88rem;font-weight:600}
+.hero-stars{color:var(--gold)}
+.hero-dist{display:flex;align-items:center;gap:.4rem;color:rgba(255,255,255,.85);font-size:.85rem}
+.hero-price{color:#fff;font-size:1.05rem;font-weight:700}
+.hero-price span{font-size:.75rem;font-weight:400;opacity:.8}
+
+/* â”€â”€ LAYOUT â”€â”€ */
+.page-body{max-width:1280px;margin:0 auto;padding:2.5rem 3rem 4rem;display:grid;grid-template-columns:1fr 360px;gap:3rem;align-items:start}
+
+/* â”€â”€ CONTENT SIDE â”€â”€ */
+.section-label{font-size:.68rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
+.section-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:500;color:var(--dark);margin-bottom:1.2rem}
+.about-text{font-size:.95rem;line-height:1.75;color:var(--mid)}
+.content-section{margin-bottom:3rem}
+
+/* Gallery */
+.gallery{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:200px 200px;gap:.75rem;border-radius:16px;overflow:hidden}
+.gallery-cell{overflow:hidden;position:relative;cursor:pointer}
+.gallery-cell img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.gallery-cell:hover img{transform:scale(1.06)}
+.gallery-cell:first-child{grid-row:1/3}
+.gallery-count{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);color:#fff;font-size:1rem;font-weight:700;opacity:0;transition:opacity .3s}
+.gallery-cell:hover .gallery-count{opacity:1}
+
+/* Amenities */
+.amenities-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.75rem}
+.amenity-card{display:flex;align-items:center;gap:.65rem;padding:.8rem 1rem;background:var(--cream);border-radius:12px;font-size:.82rem;font-weight:500;color:var(--dark);border:1px solid rgba(0,0,0,.06);transition:all .2s}
+.amenity-card:hover{background:#e8f2ec;border-color:var(--green)}
+.amenity-icon{width:20px;height:20px;flex-shrink:0;color:var(--green)}
+
+/* Location */
+.location-card{background:linear-gradient(135deg,#f0f7f3,#e8f2ec);border:1px solid rgba(46,85,64,.15);border-radius:16px;padding:1.5rem;display:flex;align-items:center;gap:1.5rem}
+.location-icon{width:52px;height:52px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.location-icon svg{color:#fff}
+.location-text h3{font-size:1rem;font-weight:600;color:var(--dark);margin-bottom:.25rem}
+.location-text p{font-size:.84rem;color:var(--mid)}
+.location-links{display:flex;gap:.75rem;margin-top:.75rem;flex-wrap:wrap}
+.location-link{text-decoration:none;font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--green);border:1.5px solid var(--green);padding:.4rem .9rem;border-radius:6px;transition:all .2s}
+.location-link:hover{background:var(--green);color:#fff}
+
+/* â”€â”€ BOOKING WIDGET â”€â”€ */
+.booking-widget{position:sticky;top:80px;background:#fff;border:1.5px solid rgba(0,0,0,.1);border-radius:20px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.1)}
+.widget-top{background:var(--deep-green);padding:1.4rem 1.5rem}
+.widget-price{font-size:1.8rem;font-weight:700;color:#fff}
+.widget-price span{font-size:.82rem;font-weight:400;color:rgba(255,255,255,.7)}
+.widget-rating{display:flex;align-items:center;gap:.4rem;margin-top:.35rem;font-size:.82rem;color:rgba(255,255,255,.85)}
+.widget-stars{color:var(--gold);font-size:.85rem}
+.widget-dist{font-size:.76rem;color:rgba(255,255,255,.65);margin-top:.2rem}
+.widget-body{padding:1.4rem 1.5rem}
+.widget-section{margin-bottom:1.2rem}
+.widget-label{font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);margin-bottom:.5rem}
+.date-row{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.date-input{width:100%;padding:.7rem .85rem;border:1.5px solid rgba(0,0,0,.12);border-radius:10px;font:500 .85rem 'DM Sans',sans-serif;color:var(--dark);background:#fafafa;outline:none;transition:border-color .2s;cursor:pointer}
+.date-input:focus{border-color:var(--green);background:#fff}
+.counter-row{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.counter-field{background:#fafafa;border:1.5px solid rgba(0,0,0,.08);border-radius:10px;padding:.7rem .85rem}
+.counter-lbl{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--mid);margin-bottom:.4rem}
+.counter-controls{display:flex;align-items:center;justify-content:space-between}
+.counter-val{font-size:1.1rem;font-weight:700;color:var(--dark);min-width:24px;text-align:center}
+.counter-btn{width:28px;height:28px;border:1.5px solid var(--green);border-radius:6px;background:transparent;color:var(--green);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:'DM Sans',sans-serif}
+.counter-btn:hover{background:var(--green);color:#fff}
+.summary-box{background:linear-gradient(135deg,#f0f7f3,#e8f2ec);border:1px solid rgba(46,85,64,.12);border-radius:12px;padding:1rem 1.1rem;margin-bottom:1.2rem}
+.summary-row{display:flex;justify-content:space-between;font-size:.82rem;padding:.22rem 0;color:var(--mid)}
+.summary-row .v{font-weight:600;color:var(--dark)}
+.summary-divider{height:1px;background:rgba(46,85,64,.12);margin:.5rem 0}
+.summary-total{font-size:.92rem;font-weight:700;color:var(--green)}
+.wa-btn{display:flex;align-items:center;justify-content:center;gap:.65rem;width:100%;padding:1rem;background:var(--wa);color:#fff;border:none;border-radius:12px;font:700 .95rem 'DM Sans',sans-serif;cursor:pointer;transition:background .2s,transform .2s;text-decoration:none;margin-bottom:.75rem}
+.wa-btn:hover{background:#1ebe5d;transform:translateY(-2px)}
+.map-btn{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:.7rem;background:transparent;color:var(--green);border:1.5px solid var(--green);border-radius:12px;font:600 .82rem 'DM Sans',sans-serif;cursor:pointer;transition:all .2s;text-decoration:none}
+.map-btn:hover{background:var(--green);color:#fff}
+.widget-note{text-align:center;font-size:.7rem;color:#aaa;margin-top:.6rem}
+
+/* â”€â”€ FOOTER â”€â”€ */
+footer{background:var(--dark-green);color:rgba(255,255,255,.6);padding:1.4rem 3rem;display:flex;align-items:center;justify-content:space-between;font-size:.75rem;flex-wrap:wrap;gap:.75rem}
+footer strong{color:var(--gold)}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--gold-light)}
+
+/* â”€â”€ MOBILE BOOKING BAR â”€â”€ */
+.mobile-book-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:300;background:var(--deep-green);padding:1rem 1.25rem;border-top:1px solid rgba(255,255,255,.1);align-items:center;justify-content:space-between;gap:1rem}
+.mobile-price{color:#fff;font-size:1.1rem;font-weight:700}
+.mobile-price span{font-size:.72rem;font-weight:400;opacity:.7}
+.mobile-book-btn{background:var(--wa);color:#fff;border:none;border-radius:10px;padding:.75rem 1.6rem;font:700 .88rem 'DM Sans',sans-serif;cursor:pointer;transition:background .2s;flex-shrink:0}
+
+/* â”€â”€ DRAWER â”€â”€ */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:400;opacity:0;pointer-events:none;transition:opacity .3s}
+.drawer-overlay.open{opacity:1;pointer-events:all}
+.drawer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-radius:22px 22px 0 0;z-index:401;padding:1.5rem 1.25rem 2rem;transform:translateY(100%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);max-height:90vh;overflow-y:auto}
+.drawer.open{transform:translateY(0)}
+.drawer-handle{width:40px;height:4px;background:#ddd;border-radius:4px;margin:0 auto 1.25rem}
+.drawer-title{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--dark);margin-bottom:1.25rem}
+
+/* â”€â”€ RESPONSIVE â”€â”€ */
+@media(max-width:900px){
+  .page-body{grid-template-columns:1fr;padding:2rem 1.5rem 6rem}
+  .booking-widget{display:none}
+  .mobile-book-bar{display:flex}
+}
+@media(max-width:600px){
+  .navbar{padding:.8rem 1.25rem}
+  .hero-content{left:1.25rem;right:1.25rem;bottom:1.5rem}
+  .hero-name{font-size:1.6rem}
+  .gallery{grid-template-columns:1fr;grid-template-rows:200px 140px 140px}
+  .gallery-cell:first-child{grid-row:auto}
+  .amenities-grid{grid-template-columns:repeat(2,1fr)}
+  footer{padding:1.2rem 1.25rem;flex-direction:column;text-align:center}
+  .footer-links{justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a class="nav-back" href="index.html">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    All Stays
+  </a>
+  <a class="nav-logo" href="index.html">
+    <img src="logo.png" alt="Sahyadri Hotels"/>
+  </a>
+  <button class="nav-book-btn" onclick="openDrawer()">Book Now</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <img src="hotel6.png" alt="The Misty Sanctuary"/>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Best Seller · Eco Resort</div>
+    <h1 class="hero-name">The Misty Sanctuary</h1>
+    <p class="hero-brand">Eco Forest Stays</p>
+    <div class="hero-meta">
+      <div class="hero-rating"><span class="hero-stars">â˜…â˜…â˜…â˜…â˜…</span> 4.88</div>
+      <div class="hero-dist">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        5.1 km from Bhimashankar Temple
+      </div>
+      <div class="hero-price">â‚¹2,499 <span>/ night</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- BODY -->
+<div class="page-body">
+  <!-- LEFT CONTENT -->
+  <div class="content">
+
+    <!-- About -->
+    <div class="content-section">
+      <p class="section-label">About This Stay</p>
+      <h2 class="section-title">Your Wellness Escape</h2>
+      <p class="about-text">Nestled in the heart of the Sahyadri forest, the Rudrya Forest View Room offers a serene retreat just 800 metres from the sacred Bhimashankar Jyotirlinga Temple. Wake up to misty mountain mornings and fall asleep to the gentle sounds of the forest. Each room is designed with warm earthy tones and natural wood accents that blend harmoniously with the surrounding wilderness. The perfect base for pilgrims, trekkers, and nature lovers alike.</p>
+    </div>
+
+    <!-- Gallery -->
+    <div class="content-section">
+      <p class="section-label">Gallery</p>
+      <h2 class="section-title">A Glimpse Inside</h2>
+      <div class="gallery">
+        <div class="gallery-cell"><img src="hotel6.png" alt="Room View"/></div>
+        <div class="gallery-cell"><img src="hotel6.png" alt="Forest View"/></div>
+        <div class="gallery-cell">
+          <img src="hotel6.png" alt="Amenities"/>
+          <div class="gallery-count">View All</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Amenities -->
+    <div class="content-section">
+      <p class="section-label">Facilities</p>
+      <h2 class="section-title">What's Included</h2>
+      <div class="amenities-grid">
+        <div class="amenity-card"><svg class="amenity-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>Free Wi-Fi</div>
+        <div class="amenity-card"><svg class="amenity-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Free Parking</div>
+        <div class="amenity-card"><svg class="amenity-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 6v6l4 2"/></svg>Hot Water</div>
+        <div class="amenity-card"><svg class="amenity-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zm4-7v3m4-3v3m4-3v3"/></svg>Room Service</div>
+        <div class="amenity-card"><svg class="amenity-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 10 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>AC Room</div>
+        <div class="amenity-card"><svg class="amenity-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Forest View</div>
+        <div class="amenity-card"><svg class="amenity-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 13 8 13s8-7.75 8-13a8 8 0 0 0-8-8z"/></svg>Temple View</div>
+        <div class="amenity-card"><svg class="amenity-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.73 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.63 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6A16 16 0 0 0 15.4 16l.96-.87a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Trekking Nearby</div>
+      </div>
+    </div>
+
+    <!-- Location -->
+    <div class="content-section">
+      <p class="section-label">Location</p>
+      <h2 class="section-title">Find Us</h2>
+      <div class="location-card">
+        <div class="location-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div class="location-text">
+          <h3>Bhimashankar, Maharashtra</h3>
+          <p>Just 5.1 km from Bhimashankar Jyotirlinga Temple Â· Khed Taluka, Pune District</p>
+          <div class="location-links">
+            <a class="location-link" href="index.html#section-map">View on Map</a>
+            <a class="location-link" href="https://www.google.com/maps/search/Bhimashankar+Temple" target="_blank" rel="noopener">Google Maps â†—</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: BOOKING WIDGET (desktop) -->
+  <aside class="booking-widget">
+    <div class="widget-top">
+      <div class="widget-price">â‚¹2,499 <span>/ night</span></div>
+      <div class="widget-rating"><span class="widget-stars">â˜…â˜…â˜…â˜…â˜…</span> 4.88 Â· Excellent</div>
+      <div class="widget-dist">5.1 km from Bhimashankar Temple</div>
+    </div>
+    <div class="widget-body">
+      <div class="widget-section">
+        <div class="widget-label">Select Dates</div>
+        <div class="date-row">
+          <div>
+            <div style="font-size:.65rem;color:var(--mid);margin-bottom:.3rem;font-weight:600;letter-spacing:.05em">CHECK-IN</div>
+            <input class="date-input" type="date" id="wCheckin" onchange="updateSummary()"/>
+          </div>
+          <div>
+            <div style="font-size:.65rem;color:var(--mid);margin-bottom:.3rem;font-weight:600;letter-spacing:.05em">CHECK-OUT</div>
+            <input class="date-input" type="date" id="wCheckout" onchange="updateSummary()"/>
+          </div>
+        </div>
+      </div>
+      <div class="widget-section">
+        <div class="widget-label">Rooms &amp; Guests</div>
+        <div class="counter-row">
+          <div class="counter-field">
+            <div class="counter-lbl">Rooms</div>
+            <div class="counter-controls">
+              <button class="counter-btn" onclick="wCount('rooms',-1)">âˆ’</button>
+              <span class="counter-val" id="wRooms">1</span>
+              <button class="counter-btn" onclick="wCount('rooms',1)">+</button>
+            </div>
+          </div>
+          <div class="counter-field">
+            <div class="counter-lbl">Guests</div>
+            <div class="counter-controls">
+              <button class="counter-btn" onclick="wCount('guests',-1)">âˆ’</button>
+              <span class="counter-val" id="wGuests">2</span>
+              <button class="counter-btn" onclick="wCount('guests',1)">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="summary-box">
+        <div class="summary-row"><span>Price per night</span><span class="v">â‚¹2,499</span></div>
+        <div class="summary-row"><span>Rooms</span><span class="v" id="sRooms">1</span></div>
+        <div class="summary-row"><span>Nights</span><span class="v" id="sNights">â€”</span></div>
+        <div class="summary-divider"></div>
+        <div class="summary-row"><span class="summary-total">Estimated Total</span><span class="v summary-total" id="sTotal">â€”</span></div>
+      </div>
+      <button class="wa-btn" onclick="bookWhatsApp()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Book via WhatsApp
+      </button>
+      <a class="map-btn" href="index.html#section-map">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+        View on Map
+      </a>
+      <p class="widget-note">You'll be redirected to WhatsApp with details pre-filled</p>
+    </div>
+  </aside>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span>Â© 2025 <strong>Sahyadri Hotels</strong>. Serene, Trustworthy, Grounded.</span>
+  <div class="footer-links">
+    <a href="#">Support</a><a href="#">Privacy</a><a href="#">Terms</a>
+  </div>
+</footer>
+
+<!-- MOBILE BOTTOM BAR -->
+<div class="mobile-book-bar">
+  <div class="mobile-price">â‚¹2,499 <span>/ night</span></div>
+  <button class="mobile-book-btn" onclick="openDrawer()">Book via WhatsApp</button>
+</div>
+
+<!-- DRAWER (mobile) -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-handle"></div>
+  <div class="drawer-title">Book The Misty Sanctuary</div>
+  <div class="widget-section">
+    <div class="widget-label">Select Dates</div>
+    <div class="date-row">
+      <div>
+        <div style="font-size:.65rem;color:var(--mid);margin-bottom:.3rem;font-weight:600">CHECK-IN</div>
+        <input class="date-input" type="date" id="dCheckin" onchange="syncDates('d')"/>
+      </div>
+      <div>
+        <div style="font-size:.65rem;color:var(--mid);margin-bottom:.3rem;font-weight:600">CHECK-OUT</div>
+        <input class="date-input" type="date" id="dCheckout" onchange="syncDates('d')"/>
+      </div>
+    </div>
+  </div>
+  <div class="widget-section" style="margin-top:1rem">
+    <div class="widget-label">Rooms &amp; Guests</div>
+    <div class="counter-row">
+      <div class="counter-field">
+        <div class="counter-lbl">Rooms</div>
+        <div class="counter-controls">
+          <button class="counter-btn" onclick="dCount('rooms',-1)">âˆ’</button>
+          <span class="counter-val" id="dRooms">1</span>
+          <button class="counter-btn" onclick="dCount('rooms',1)">+</button>
+        </div>
+      </div>
+      <div class="counter-field">
+        <div class="counter-lbl">Guests</div>
+        <div class="counter-controls">
+          <button class="counter-btn" onclick="dCount('guests',-1)">âˆ’</button>
+          <span class="counter-val" id="dGuests">2</span>
+          <button class="counter-btn" onclick="dCount('guests',1)">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="summary-box" style="margin-top:1rem">
+    <div class="summary-row"><span>Price per night</span><span class="v">â‚¹2,499</span></div>
+    <div class="summary-row"><span>Rooms</span><span class="v" id="dsRooms">1</span></div>
+    <div class="summary-row"><span>Nights</span><span class="v" id="dsNights">â€”</span></div>
+    <div class="summary-divider"></div>
+    <div class="summary-row"><span class="summary-total">Estimated Total</span><span class="v summary-total" id="dsTotal">â€”</span></div>
+  </div>
+  <button class="wa-btn" style="margin-top:.5rem" onclick="bookWhatsApp()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Confirm Booking via WhatsApp
+  </button>
+</div>
+
+<script>
+  const HOTEL={name:'The Misty Sanctuary',brand:'Eco Forest Stays',price:3500,waNum:'919322273478'};
+  const wC={rooms:1,guests:2},dC={rooms:1,guests:2};
+
+  function init(){
+    const t=new Date(),t2=new Date(t);t2.setDate(t.getDate()+1);
+    const fmt=d=>d.toISOString().split('T')[0];
+    ['wCheckin','dCheckin'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=fmt(t);});
+    ['wCheckout','dCheckout'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=fmt(t2);});
+    updateSummary();
+  }
+
+  function wCount(t,d){wC[t]=Math.min(t==='rooms'?10:20,Math.max(1,wC[t]+d));document.getElementById('w'+t.charAt(0).toUpperCase()+t.slice(1)).textContent=wC[t];updateSummary();}
+  function dCount(t,d){dC[t]=Math.min(t==='rooms'?10:20,Math.max(1,dC[t]+d));document.getElementById('d'+t.charAt(0).toUpperCase()+t.slice(1)).textContent=dC[t];syncDates('d');}
+
+  function getNights(cin,cout){if(!cin||!cout)return 0;const n=Math.round((new Date(cout)-new Date(cin))/86400000);return Math.max(0,n);}
+
+  function updateSummary(){
+    const cin=document.getElementById('wCheckin')?.value,cout=document.getElementById('wCheckout')?.value;
+    const n=getNights(cin,cout),r=wC.rooms,tot=n*r*HOTEL.price;
+    document.getElementById('sRooms').textContent=r;
+    document.getElementById('sNights').textContent=n>0?n+(n===1?' night':' nights'):'â€”';
+    document.getElementById('sTotal').textContent=n>0?'â‚¹'+tot.toLocaleString('en-IN'):'â€”';
+  }
+
+  function syncDates(src){
+    const cin=document.getElementById(src+'Checkin')?.value,cout=document.getElementById(src+'Checkout')?.value;
+    const n=getNights(cin,cout),r=dC.rooms,tot=n*r*HOTEL.price;
+    document.getElementById('dsRooms').textContent=r;
+    document.getElementById('dsNights').textContent=n>0?n+(n===1?' night':' nights'):'â€”';
+    document.getElementById('dsTotal').textContent=n>0?'â‚¹'+tot.toLocaleString('en-IN'):'â€”';
+  }
+
+  function bookWhatsApp(){
+    const isMob=window.innerWidth<=900;
+    const cin=document.getElementById(isMob?'dCheckin':'wCheckin')?.value;
+    const cout=document.getElementById(isMob?'dCheckout':'wCheckout')?.value;
+    const rooms=isMob?dC.rooms:wC.rooms,guests=isMob?dC.guests:wC.guests;
+    if(!cin||!cout){alert('Please select check-in and check-out dates.');return;}
+    const n=getNights(cin,cout);
+    if(n<=0){alert('Check-out must be after check-in.');return;}
+    const fmt=s=>{const d=new Date(s);return d.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'long',year:'numeric'});};
+    const tot=(HOTEL.price*rooms*n).toLocaleString('en-IN');
+    const msg=`ðŸ™ *Booking Request â€“ Sahyadri Hotels*\n\nðŸ¨ *Hotel:* ${HOTEL.name}\nðŸ¢ *Brand:* ${HOTEL.brand}\n\nðŸ“… *Check-In:*  ${fmt(cin)}\nðŸ“… *Check-Out:* ${fmt(cout)}\nðŸŒ™ *Nights:* ${n}\n\nðŸ›ï¸ *Rooms:* ${rooms}\nðŸ‘¥ *Guests:* ${guests}\n\nðŸ’° *Price per room/night:* â‚¹${HOTEL.price.toLocaleString('en-IN')}\nðŸ’µ *Estimated Total:* â‚¹${tot}\n\nPlease confirm my booking. Thank you! ðŸ™`;
+    window.open(`https://wa.me/${HOTEL.waNum}?text=${encodeURIComponent(msg)}`,'_blank');
+  }
+
+  function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawerOverlay').classList.add('open');document.body.style.overflow='hidden';}
+  function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawerOverlay').classList.remove('open');document.body.style.overflow='';}
+
+  init();
+</script>
+</body>
+</html>
+
+

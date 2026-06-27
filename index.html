@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -8,7 +8,25 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <style>
+    /* Leaflet price marker */
+    .price-marker { background: #13261E; color: #fff; font: 700 13px 'DM Sans',sans-serif; padding: 6px 12px; border-radius: 22px; box-shadow: 0 4px 16px rgba(0,0,0,.35); white-space: nowrap; cursor: pointer; border: none; transition: transform .2s, background .2s; position: relative; }
+    .price-marker::after { content: ''; position: absolute; bottom: -7px; left: 50%; transform: translateX(-50%); border: 7px solid transparent; border-bottom: none; border-top-color: #13261E; }
+    .price-marker:hover { background: #2E5540; transform: scale(1.08); }
+    .temple-marker { background: #C9A96E; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid #fff; box-shadow: 0 4px 16px rgba(0,0,0,.3); cursor: default; }
+    .leaflet-popup-content-wrapper { border-radius: 14px!important; box-shadow: 0 8px 32px rgba(0,0,0,.18)!important; border: none!important; font-family: 'DM Sans',sans-serif!important; }
+    .map-popup { padding: 4px 2px; }
+    .map-popup-name { font-family: 'Playfair Display',serif; font-size: 1rem; font-weight: 500; color: #1a1a1a; margin-bottom: 4px; }
+    .map-popup-dist { font-size: .76rem; color: #555; margin-bottom: 8px; }
+    .map-popup-price { font-size: .88rem; font-weight: 700; color: #2E5540; margin-bottom: 10px; }
+    .map-popup-btn { display: block; text-align: center; background: #2E5540; color: #fff; text-decoration: none; border-radius: 8px; padding: .5rem 1rem; font-size: .78rem; font-weight: 600; transition: background .2s; }
+    .map-popup-btn:hover { background: #1d3d2e; }
+    /* card footer two-button layout */
+    .card-footer { flex-wrap: wrap; gap: .5rem; }
+    .card-btn-map { background: transparent; color: var(--accent-green); border: 1.5px solid var(--accent-green); border-radius: 50px; padding: .55rem 1rem; font-size: .72rem; font-weight: 600; cursor: pointer; transition: all .2s; text-decoration: none; display: inline-flex; align-items: center; gap: .3rem; }
+    .card-btn-map:hover { background: var(--accent-green); color: #fff; }
+  </style>  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root{
@@ -732,7 +750,7 @@
             <div class="card-amenities"><span class="card-amenity">Free Wi-Fi</span><span class="card-amenity">Parking</span><span class="card-amenity">Hot Water</span></div>
             <div class="card-footer">
               <div class="card-price">₹2,499 <span>/ night</span></div>
-              <button class="card-btn" onclick="openBooking({name:'Rudrya Forest View Room',brand:'Rudrya Hospitality',price:2499,img:'hotel1.png'})">Book Now</button>
+              <button class="card-btn" href="hotel-rudrya-forest.html">View Hotel</a></div><div style="padding:.4rem 1.4rem .9rem;display:flex;gap:.5rem"><a class="card-btn" href="hotel-rudrya-forest.html">Book Now</a><a class="card-btn-map" href="#section-map" onclick="highlightHotel(0)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>Map</a>
             </div>
           </div>
         </div>
@@ -752,7 +770,7 @@
             <div class="card-amenities"><span class="card-amenity">Parking</span><span class="card-amenity">Restaurant</span><span class="card-amenity">Family Rooms</span></div>
             <div class="card-footer">
               <div class="card-price">₹3,499 <span>/ night</span></div>
-              <button class="card-btn" onclick="openBooking({name:'Rudrya Family Suite',brand:'Rudrya Hospitality',price:3499,img:'hotel2.png'})">Book Now</button>
+              <button class="card-btn" href="hotel-rudrya-family.html">View Hotel</a></div><div style="padding:.4rem 1.4rem .9rem;display:flex;gap:.5rem"><a class="card-btn" href="hotel-rudrya-family.html">Book Now</a><a class="card-btn-map" href="#section-map" onclick="highlightHotel(1)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>Map</a>
             </div>
           </div>
         </div>
@@ -772,7 +790,7 @@
             <div class="card-amenities"><span class="card-amenity">Parking</span><span class="card-amenity">Forest View</span><span class="card-amenity">Hot Water</span></div>
             <div class="card-footer">
               <div class="card-price">₹2,999 <span>/ night</span></div>
-              <button class="card-btn" onclick="openBooking({name:'Sahyadri Hill Cottage',brand:'Sahyadri Forest Stays',price:2999,img:'hotel3.png'})">Book Now</button>
+              <button class="card-btn" href="hotel-sahyadri-cottage.html">View Hotel</a></div><div style="padding:.4rem 1.4rem .9rem;display:flex;gap:.5rem"><a class="card-btn" href="hotel-sahyadri-cottage.html">Book Now</a><a class="card-btn-map" href="#section-map" onclick="highlightHotel(2)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>Map</a>
             </div>
           </div>
         </div>
@@ -792,7 +810,7 @@
             <div class="card-amenities"><span class="card-amenity">Private Balcony</span><span class="card-amenity">2 Bedrooms</span><span class="card-amenity">Mountain View</span></div>
             <div class="card-footer">
               <div class="card-price">₹8,500 <span>/ night</span></div>
-              <button class="card-btn" onclick="openBooking({name:'Sahyadri Cloud Villa',brand:'Sahyadri Forest Stays',price:8500,img:'hotel4.png'})">Book Now</button>
+              <button class="card-btn" href="hotel-cloud-villa.html">View Hotel</a></div><div style="padding:.4rem 1.4rem .9rem;display:flex;gap:.5rem"><a class="card-btn" href="hotel-cloud-villa.html">Book Now</a><a class="card-btn-map" href="#section-map" onclick="highlightHotel(3)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>Map</a>
             </div>
           </div>
         </div>
@@ -812,7 +830,7 @@
             <div class="card-amenities"><span class="card-amenity">Breakfast Incl.</span><span class="card-amenity">Sacred Vibes</span><span class="card-amenity">Garden</span></div>
             <div class="card-footer">
               <div class="card-price">₹4,200 <span>/ night</span></div>
-              <button class="card-btn" onclick="openBooking({name:'Temple-Side Heritage Inn',brand:'Heritage Retreats',price:4200,img:'hotel5.png'})">Book Now</button>
+              <button class="card-btn" href="hotel-heritage-inn.html">View Hotel</a></div><div style="padding:.4rem 1.4rem .9rem;display:flex;gap:.5rem"><a class="card-btn" href="hotel-heritage-inn.html">Book Now</a><a class="card-btn-map" href="#section-map" onclick="highlightHotel(4)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>Map</a>
             </div>
           </div>
         </div>
@@ -832,7 +850,7 @@
             <div class="card-amenities"><span class="card-amenity">Eco Resort</span><span class="card-amenity">Spa &amp; Wellness</span><span class="card-amenity">Forest View</span></div>
             <div class="card-footer">
               <div class="card-price">₹3,500 <span>/ night</span></div>
-              <button class="card-btn" onclick="openBooking({name:'The Misty Sanctuary',brand:'Eco Forest Stays',price:3500,img:'hotel6.png'})">Book Now</button>
+              <button class="card-btn" href="hotel-misty-sanctuary.html">View Hotel</a></div><div style="padding:.4rem 1.4rem .9rem;display:flex;gap:.5rem"><a class="card-btn" href="hotel-misty-sanctuary.html">Book Now</a><a class="card-btn-map" href="#section-map" onclick="highlightHotel(5)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>Map</a>
             </div>
           </div>
         </div>
@@ -892,7 +910,7 @@
               <div class="list-card-top"><h3 class="list-card-name">Sahyadri Cloud Villa</h3><div class="list-card-rating"><svg width="12" height="12" viewBox="0 0 24 24" fill="#C9A96E" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>4.92</div></div>
               <p class="list-card-desc">Entire cottage · 2 bedrooms · Private Balcony</p>
               <div class="list-card-dist"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>2.4 km from Jyotirlinga Temple</div>
-              <div class="list-card-footer"><div class="list-card-price">₹8,500 <span>/ night</span></div><button class="list-card-btn" onclick="openBooking({name:'Sahyadri Cloud Villa',brand:'Sahyadri Forest Stays',price:8500,img:'hotel4.png'})">Book Now</button></div>
+              <div class="list-card-footer"><div class="list-card-price">₹8,500 <span>/ night</span></div><a class="list-card-btn" href="hotel-cloud-villa.html">View Hotel</a></div><div style="padding:.4rem 1.4rem .9rem;display:flex;gap:.5rem"><a class="card-btn" href="hotel-cloud-villa.html">Book Now</a><a class="card-btn-map" href="#section-map" onclick="highlightHotel(3)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>Map</a></div>
             </div>
           </div>
 
@@ -902,7 +920,7 @@
               <div class="list-card-top"><h3 class="list-card-name">Temple-Side Heritage Inn</h3><div class="list-card-rating"><svg width="12" height="12" viewBox="0 0 24 24" fill="#C9A96E" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>4.75</div></div>
               <p class="list-card-desc">Boutique Hotel · Breakfast Included · Sacred vibes</p>
               <div class="list-card-dist"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>0.5 km from Jyotirlinga Temple</div>
-              <div class="list-card-footer"><div class="list-card-price">₹4,200 <span>/ night</span></div><button class="list-card-btn" onclick="openBooking({name:'Temple-Side Heritage Inn',brand:'Heritage Retreats',price:4200,img:'hotel5.png'})">Book Now</button></div>
+              <div class="list-card-footer"><div class="list-card-price">₹4,200 <span>/ night</span></div><a class="list-card-btn" href="hotel-heritage-inn.html">View Hotel</a></div><div style="padding:.4rem 1.4rem .9rem;display:flex;gap:.5rem"><a class="card-btn" href="hotel-heritage-inn.html">Book Now</a><a class="card-btn-map" href="#section-map" onclick="highlightHotel(4)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>Map</a></div>
             </div>
           </div>
 
@@ -913,7 +931,7 @@
               <div class="list-card-top"><h3 class="list-card-name">The Misty Sanctuary</h3><div class="list-card-rating"><svg width="12" height="12" viewBox="0 0 24 24" fill="#C9A96E" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>4.88</div></div>
               <p class="list-card-desc">Eco Resort · Spa &amp; Wellness · Forest View</p>
               <div class="list-card-dist"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>5.1 km from Jyotirlinga Temple</div>
-              <div class="list-card-footer"><div class="list-card-price">₹3,500 <span>/ night</span></div><button class="list-card-btn" onclick="openBooking({name:'The Misty Sanctuary',brand:'Eco Forest Stays',price:3500,img:'hotel6.png'})">Book Now</button></div>
+              <div class="list-card-footer"><div class="list-card-price">₹3,500 <span>/ night</span></div><a class="list-card-btn" href="hotel-misty-sanctuary.html">View Hotel</a></div><div style="padding:.4rem 1.4rem .9rem;display:flex;gap:.5rem"><a class="card-btn" href="hotel-misty-sanctuary.html">Book Now</a><a class="card-btn-map" href="#section-map" onclick="highlightHotel(5)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>Map</a></div>
             </div>
           </div>
 
@@ -923,7 +941,7 @@
               <div class="list-card-top"><h3 class="list-card-name">Rudrya Forest View Room</h3><div class="list-card-rating"><svg width="12" height="12" viewBox="0 0 24 24" fill="#C9A96E" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>4.80</div></div>
               <p class="list-card-desc">Standard Room · Free Wi-Fi · Hot Water</p>
               <div class="list-card-dist"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>800 m from Jyotirlinga Temple</div>
-              <div class="list-card-footer"><div class="list-card-price">₹2,499 <span>/ night</span></div><button class="list-card-btn" onclick="openBooking({name:'Rudrya Forest View Room',brand:'Rudrya Hospitality',price:2499,img:'hotel1.png'})">Book Now</button></div>
+              <div class="list-card-footer"><div class="list-card-price">₹2,499 <span>/ night</span></div><a class="list-card-btn" href="hotel-rudrya-forest.html">View Hotel</a></div><div style="padding:.4rem 1.4rem .9rem;display:flex;gap:.5rem"><a class="card-btn" href="hotel-rudrya-forest.html">Book Now</a><a class="card-btn-map" href="#section-map" onclick="highlightHotel(0)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>Map</a></div>
             </div>
           </div>
 
@@ -933,7 +951,7 @@
               <div class="list-card-top"><h3 class="list-card-name">Rudrya Family Suite</h3><div class="list-card-rating"><svg width="12" height="12" viewBox="0 0 24 24" fill="#C9A96E" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>4.70</div></div>
               <p class="list-card-desc">Family Suite · Restaurant · Parking</p>
               <div class="list-card-dist"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>1.2 km from Jyotirlinga Temple</div>
-              <div class="list-card-footer"><div class="list-card-price">₹3,499 <span>/ night</span></div><button class="list-card-btn" onclick="openBooking({name:'Rudrya Family Suite',brand:'Rudrya Hospitality',price:3499,img:'hotel2.png'})">Book Now</button></div>
+              <div class="list-card-footer"><div class="list-card-price">₹3,499 <span>/ night</span></div><a class="list-card-btn" href="hotel-rudrya-family.html">View Hotel</a></div><div style="padding:.4rem 1.4rem .9rem;display:flex;gap:.5rem"><a class="card-btn" href="hotel-rudrya-family.html">Book Now</a><a class="card-btn-map" href="#section-map" onclick="highlightHotel(1)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>Map</a></div>
             </div>
           </div>
 
@@ -943,20 +961,14 @@
               <div class="list-card-top"><h3 class="list-card-name">Sahyadri Hill Cottage</h3><div class="list-card-rating"><svg width="12" height="12" viewBox="0 0 24 24" fill="#C9A96E" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>4.65</div></div>
               <p class="list-card-desc">Hill Cottage · Forest View · Hot Water</p>
               <div class="list-card-dist"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>1.5 km from Jyotirlinga Temple</div>
-              <div class="list-card-footer"><div class="list-card-price">₹2,999 <span>/ night</span></div><button class="list-card-btn" onclick="openBooking({name:'Sahyadri Hill Cottage',brand:'Sahyadri Forest Stays',price:2999,img:'hotel3.png'})">Book Now</button></div>
+              <div class="list-card-footer"><div class="list-card-price">₹2,999 <span>/ night</span></div><a class="list-card-btn" href="hotel-sahyadri-cottage.html">View Hotel</a></div><div style="padding:.4rem 1.4rem .9rem;display:flex;gap:.5rem"><a class="card-btn" href="hotel-sahyadri-cottage.html">Book Now</a><a class="card-btn-map" href="#section-map" onclick="highlightHotel(2)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>Map</a></div>
             </div>
           </div>
         </div>
 
         <!-- RIGHT: Google Map -->
         <div class="map-panel" id="mapPanel">
-          <iframe
-            title="Hotels near Bhimashankar Temple"
-            src="https://maps.google.com/maps?q=Bhimashankar+Jyotirlinga+Temple,+Maharashtra&t=&z=14&ie=UTF8&iwloc=&output=embed"
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            allowfullscreen>
-          </iframe>
+          <div id="leafletMap" style="width:100%;height:100%;z-index:1;"></div>
         </div>
       </div>
     </section>
@@ -1300,5 +1312,95 @@
       prepareSlides();
     });
   </script>
+
+  <!-- LEAFLET MAP -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/WLs=" crossorigin=""></script>
+  <script>
+    /* ── CUSTOM LEAFLET MAP ───────────────────────── */
+    var leafletMap = null;
+    var hotelMarkers = [];
+
+    const HOTELS_MAP = [
+      { name: 'Rudrya Forest View Room',   price: '₹2.5k', dist: '800 m', url: 'hotel-rudrya-forest.html',     lat: 19.0754, lng: 73.5342 },
+      { name: 'Rudrya Family Suite',        price: '₹3.5k', dist: '1.2 km', url: 'hotel-rudrya-family.html',    lat: 19.0686, lng: 73.5450 },
+      { name: 'Sahyadri Hill Cottage',      price: '₹3k',   dist: '1.5 km', url: 'hotel-sahyadri-cottage.html', lat: 19.0551, lng: 73.5207 },
+      { name: 'Sahyadri Cloud Villa',       price: '₹8.5k', dist: '2.4 km', url: 'hotel-cloud-villa.html',      lat: 19.0900, lng: 73.5560 },
+      { name: 'Temple-Side Heritage Inn',   price: '₹4.2k', dist: '0.5 km', url: 'hotel-heritage-inn.html',     lat: 19.0731, lng: 73.5342 },
+      { name: 'The Misty Sanctuary',        price: '₹3.5k', dist: '5.1 km', url: 'hotel-misty-sanctuary.html',  lat: 19.0227, lng: 73.5740 }
+    ];
+
+    function initLeafletMap() {
+      if (leafletMap) return;
+      const el = document.getElementById('leafletMap');
+      if (!el) return;
+
+      leafletMap = L.map('leafletMap', { zoomControl: true, scrollWheelZoom: false }).setView([19.0686, 73.5342], 13);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 19
+      }).addTo(leafletMap);
+
+      // Temple marker
+      const templeIcon = L.divIcon({
+        className: '',
+        html: '<div class="temple-marker"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#13261E" stroke-width="2"><path d="M3 21h18M5 21V7l8-4v18M13 11h4v10M9 9v2M9 13v2M9 17v2"/></svg></div>',
+        iconSize: [38, 38], iconAnchor: [19, 38]
+      });
+      L.marker([19.0686, 73.5342], { icon: templeIcon })
+        .addTo(leafletMap)
+        .bindPopup('<strong style="font-family:Playfair Display,serif">Bhimashankar Jyotirlinga Temple</strong>', { maxWidth: 200 });
+
+      // Hotel markers
+      HOTELS_MAP.forEach((h, i) => {
+        const icon = L.divIcon({
+          className: '',
+          html: `<div class="price-marker" onclick="window.location.href='${h.url}'">${h.price}</div>`,
+          iconSize: [null, null], iconAnchor: [30, 40]
+        });
+        const marker = L.marker([h.lat, h.lng], { icon }).addTo(leafletMap);
+        marker.bindPopup(`
+          <div class="map-popup">
+            <div class="map-popup-name">${h.name}</div>
+            <div class="map-popup-dist">📍 ${h.dist} from Bhimashankar Temple</div>
+            <div class="map-popup-price">${h.price} / night</div>
+            <a class="map-popup-btn" href="${h.url}">View &amp; Book →</a>
+          </div>
+        `, { maxWidth: 220 });
+        hotelMarkers.push(marker);
+      });
+    }
+
+    function highlightHotel(idx) {
+      // Wait for map panel to be visible, then open that hotel's popup
+      setTimeout(() => {
+        if (!leafletMap) initLeafletMap();
+        if (hotelMarkers[idx]) {
+          leafletMap.setView([HOTELS_MAP[idx].lat, HOTELS_MAP[idx].lng], 15, { animate: true });
+          hotelMarkers[idx].openPopup();
+        }
+      }, 400);
+    }
+
+    // Init map when the map panel becomes visible (tab switch or scroll)
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check if map tab is active or on desktop (both panels visible)
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { initLeafletMap(); observer.disconnect(); } });
+      }, { threshold: 0.1 });
+      const mp = document.getElementById('mapPanel');
+      if (mp) observer.observe(mp);
+    });
+
+    // Override switchMapTab to init map when switching to map view
+    const _origSwitch = window.switchMapTab;
+    window.switchMapTab = function(tab) {
+      if (typeof _origSwitch === 'function') _origSwitch(tab);
+      if (tab === 'map') setTimeout(initLeafletMap, 100);
+    };
+  </script>
 </body>
 </html>
+
+
+
