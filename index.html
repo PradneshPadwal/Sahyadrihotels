@@ -870,10 +870,10 @@
           <p class="stays-label">All Stays</p>
           <h2 class="stays-title">Available Stays</h2>
         </div>
-        <p class="stays-count-badge" id="stays-count-badge">Loading stays...</p>
+        <p class="stays-count-badge">6 stays available near temple</p>
       </div>
 
-      <div class="stays-grid" id="stays-grid">
+      <div class="stays-grid">
         <!-- Card 1 -->
         <div class="stay-card reveal reveal-delay-1" onclick="window.location.href='hotel-rudrya-forest.html'" style="cursor:pointer;">
           <div class="card-img-wrap">
@@ -1363,66 +1363,7 @@
     window.addEventListener('load', () => {
       document.getElementById('intro-bg').style.transform = 'scale(1)';
       prepareSlides();
-      loadHotels();
     });
-      /* ── DYNAMIC HOTELS ─────────────────────────────── */
-    async function loadHotels() {
-      if (!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY) {
-        console.error('Supabase configuration missing');
-        return;
-      }
-      try {
-        const url = `${window.SUPABASE_URL}/rest/v1/hotels?is_active=eq.true&select=*`;
-        const resp = await fetch(url, { headers: { 'apikey': window.SUPABASE_ANON_KEY } });
-        if (!resp.ok) throw new Error('Failed to load hotels');
-        const hotels = await resp.json();
-        
-        hotels.sort((a, b) => {
-          if (a.manual_rank && b.manual_rank) return a.manual_rank - b.manual_rank;
-          if (a.manual_rank) return -1;
-          if (b.manual_rank) return 1;
-          return (b.rating || 0) - (a.rating || 0);
-        });
-
-        document.getElementById('stays-count-badge').textContent = `${hotels.length + 6} stays available near temple`;
-        
-        const grid = document.getElementById('stays-grid');
-        grid.insertAdjacentHTML("beforeend", hotels.map((h, i) => {
-          const img = h.images && h.images.length > 0 ? h.images[0] : '';
-          const delay = (i % 3) + 1;
-          const price = h.price_per_night ? '₹' + h.price_per_night.toLocaleString('en-IN') : 'Contact for price';
-          
-          let amenitiesHtml = '';
-          if (h.amenities && h.amenities.length) {
-            amenitiesHtml = h.amenities.slice(0,3).map(a => `<span class="card-amenity">${a}</span>`).join('');
-          }
-
-          return `
-            <div class="stay-card reveal reveal-delay-${delay} visible" onclick="window.location.href='hotel.html?slug=${h.slug}'" style="cursor:pointer; opacity:1; transform:translateY(0);">
-              <div class="card-img-wrap">
-                ${img ? `<img src="${img}" alt="${h.name}" loading="lazy" />` : '<div style="height:100%;display:flex;align-items:center;justify-content:center;background:#1a1a1a;color:#555">No image</div>'}
-                <button class="card-wish-btn" type="button" aria-label="Add to wishlist" onclick="event.stopPropagation(); toggleWish(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-              </div>
-              <div class="card-body">
-                <div class="card-top-row">
-                  <div class="card-distance"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${h.distance_from_temple || 'Near Temple'}</div>
-                </div>
-                <h3 class="card-name">${h.name}</h3>
-                <p class="card-brand">${h.brand || ''}</p>
-                <div class="card-amenities">${amenitiesHtml}</div>
-                <div class="card-footer">
-                  <div class="card-price">${price} <span>/ night</span></div>
-                </div>
-              </div>
-            </div>
-          `;
-        }).join(''));
-      } catch(e) {
-        console.error(e);
-        document.getElementById('stays-grid').insertAdjacentHTML("beforeend", `<p style="color:#aaa; grid-column:1/-1;">Could not load dynamic hotels.</p>`);
-      }
-    }
   </script>
-  <script src="/api/config"></script>
 </body>
 </html>
