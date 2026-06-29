@@ -1,5 +1,9 @@
 module.exports = async function(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  res.setHeader('Cache-Control', 'no-store');
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
   
   const authHeader = req.headers.authorization;
   const envHash = process.env.ADMIN_PASSWORD_HASH;
@@ -7,12 +11,15 @@ module.exports = async function(req, res) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://xykethxpdcwqdzlpnojm.supabase.co';
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const fileName = req.query.name;
 
-  if (!serviceKey || !fileName) {
+  if (!supabaseUrl || !serviceKey || !fileName) {
     return res.status(500).json({ error: 'Missing parameters or configuration' });
+  }
+  if (typeof fileName !== 'string' || fileName.includes('..') || fileName.startsWith('/') || !/^[a-zA-Z0-9/_-]+\.(png|jpe?g|webp|gif)$/i.test(fileName)) {
+    return res.status(400).json({ error: 'Invalid file name' });
   }
 
   try {
@@ -24,6 +31,9 @@ module.exports = async function(req, res) {
     const buffer = Buffer.concat(chunks);
 
     const contentType = req.headers['content-type'] || 'application/octet-stream';
+    if (!/^image\/(png|jpe?g|webp|gif)$/i.test(contentType)) {
+      return res.status(400).json({ error: 'Only image uploads are allowed' });
+    }
     
     // Upload to Supabase Storage
     const uploadUrl = `${supabaseUrl}/storage/v1/object/hotel-images/${fileName}`;

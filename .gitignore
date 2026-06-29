@@ -1,0 +1,9 @@
+temp.js
+live_index.html
+old_index.html
+*.log
+.vercel
+.env
+.env.local
+.codex-*/
+home-smoke.png

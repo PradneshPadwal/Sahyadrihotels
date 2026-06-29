@@ -333,6 +333,27 @@ let pendingImages = [];
 let uploadedUrls = [];  
 let amenities = [];
 
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[ch]));
+}
+function escapeJsString(value) {
+  return String(value ?? '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n').replace(/\r/g, '');
+}
+function isSafeHttpUrl(value) {
+  try {
+    const url = new URL(value, window.location.origin);
+    return url.protocol === 'https:' || url.protocol === 'http:';
+  } catch {
+    return false;
+  }
+}
+
 // ── Crypto Hash ──
 async function hashString(str) {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
@@ -444,27 +465,31 @@ function renderHotels() {
     return;
   }
   grid.innerHTML = allHotels.map(h => {
-    const img = h.images && h.images.length ? h.images[0] : '';
+    const img = h.images && h.images.length && isSafeHttpUrl(h.images[0]) ? h.images[0] : '';
     const stars = renderStars(h.rating);
+    const id = escapeJsString(h.id);
+    const name = escapeHtml(h.name);
+    const brand = escapeHtml(h.brand || '');
+    const location = escapeHtml(h.location || '');
     return `<div class="hotel-card">
       <div class="hotel-card-img">
-        ${img ? `<img src="${img}" alt="${h.name}" loading="lazy"/>` : `<div class="no-img"><span>No image</span></div>`}
+        ${img ? `<img src="${escapeHtml(img)}" alt="${name}" loading="lazy"/>` : `<div class="no-img"><span>No image</span></div>`}
         ${!h.is_active ? '<div class="badge-inactive">INACTIVE</div>' : ''}
-        ${h.manual_rank ? `<div class="badge-rank">Rank #${h.manual_rank}</div>` : ''}
+        ${h.manual_rank ? `<div class="badge-rank">Rank #${Number(h.manual_rank)}</div>` : ''}
       </div>
       <div class="hotel-card-body">
-        <div class="hc-name">${h.name}</div>
-        <div class="hc-brand">${h.brand || ''}</div>
+        <div class="hc-name">${name}</div>
+        <div class="hc-brand">${brand}</div>
         <div class="hc-meta">
           <span class="hc-rating">${stars} ${parseFloat(h.rating||0).toFixed(1)}</span>
         </div>
-        <div class="hc-dist">${h.location || ''}</div>
+        <div class="hc-dist">${location}</div>
         <div class="hc-actions">
-          <button class="btn-sm btn-edit" onclick="openEditModal('${h.id}')">&#x270E; Edit</button>
-          <button class="btn-sm btn-toggle ${h.is_active ? '' : 'inactive'}" onclick="toggleActive('${h.id}', ${h.is_active})">
+          <button class="btn-sm btn-edit" onclick="openEditModal('${id}')">&#x270E; Edit</button>
+          <button class="btn-sm btn-toggle ${h.is_active ? '' : 'inactive'}" onclick="toggleActive('${id}', ${h.is_active})">
             ${h.is_active ? '&#x25CF; Active' : '&#x25CB; Inactive'}
           </button>
-          <button class="btn-sm btn-del" onclick="deleteHotel('${h.id}', '${h.name.replace(/'/g,"\\'")}')">&times; Delete</button>
+          <button class="btn-sm btn-del" onclick="deleteHotel('${id}', '${escapeJsString(h.name)}')">&times; Delete</button>
         </div>
       </div>
     </div>`;
@@ -519,7 +544,7 @@ function renderAmenities() {
   amenities.forEach((a, i) => {
     const pill = document.createElement('span');
     pill.className = 'tag-pill';
-    pill.innerHTML = `${a} <button type="button" onclick="removeAmenity(${i})">&#x2715;</button>`;
+    pill.innerHTML = `${escapeHtml(a)} <button type="button" onclick="removeAmenity(${i})">&#x2715;</button>`;
     c.appendChild(pill);
   });
   c.appendChild(inp);
@@ -550,7 +575,7 @@ function renderPreviews() {
     ...pendingImages.map((p, i) => ({ src: p.previewUrl, idx: i, uploaded: false }))
   ];
   container.innerHTML = allPreviews.map(p =>
-    `<div class="img-preview-item"><img src="${p.src}" alt="preview"/>
+    `<div class="img-preview-item"><img src="${escapeHtml(p.src)}" alt="preview"/>
       <button class="remove-img" onclick="removeImage(${p.idx}, ${p.uploaded})">&#x2715;</button>
     </div>`
   ).join('');
@@ -686,7 +711,7 @@ async function submitHotel() {
 async function deleteHotel(id, name) {
   if (!confirm(`Are you sure you want to delete "${name}"?\nThis cannot be undone.`)) return;
   try {
-    await apiCall(`/api/admin-hotels?id=${id}`, 'DELETE');
+    await apiCall(`/api/admin-hotels?id=${encodeURIComponent(id)}`, 'DELETE');
     showToast('Hotel deleted', 'info');
     loadHotels();
   } catch(e) {

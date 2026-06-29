@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Loading… — Sahyadri Hotels</title>
 <meta name="description" content="Premium stays near Bhimashankar Jyotirlinga Temple."/>
+<link rel="canonical" href="https://www.bhimashankarhotel.com/hotel.html"/>
+<meta name="theme-color" content="#13261E"/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="Sahyadri Hotels"/>
+<meta property="og:description" content="Premium stays near Bhimashankar Jyotirlinga Temple."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
@@ -288,7 +293,7 @@ img{max-width:100%;display:block}
   </div>
 
   <footer class="site-footer">
-    <span>&#169; 2025 <strong>Sahyadri Hotels</strong>. Serene, Trustworthy, Grounded.</span>
+    <span>&#169; 2026 <strong>Sahyadri Hotels</strong>. Serene, Trustworthy, Grounded.</span>
     <div class="footer-links">
       <a href="#">Support</a><a href="#">Privacy</a><a href="#">Terms</a>
     </div>
@@ -301,13 +306,34 @@ let hotel = null;
 let wGuests = 2, wRooms = 1;
 
 function getSlug() { return new URLSearchParams(window.location.search).get('slug'); }
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[ch]));
+}
+function isSafeHttpUrl(value) {
+  try {
+    const url = new URL(value, window.location.origin);
+    return url.protocol === 'https:' || url.protocol === 'http:';
+  } catch {
+    return false;
+  }
+}
+function toDateInputValue(date) {
+  const tzOffset = date.getTimezoneOffset() * 60000;
+  return new Date(date.getTime() - tzOffset).toISOString().split('T')[0];
+}
 
 async function loadHotel() {
   const slug = getSlug();
   if (!slug) { showError('No hotel specified.'); return; }
   
   try {
-    const url = `${window.SUPABASE_URL}/rest/v1/hotels?slug=eq.${slug}&is_active=eq.true&select=*`;
+    const url = `${window.SUPABASE_URL}/rest/v1/hotels?slug=eq.${encodeURIComponent(slug)}&is_active=eq.true&select=*`;
     const resp = await fetch(url, { headers: { 'apikey': window.SUPABASE_ANON_KEY } });
     const data = await resp.json();
     
@@ -346,12 +372,12 @@ function convertToEmbedUrl(url) {
     const srcMatch = url.match(/src="([^"]+)"/);
     if (srcMatch) return srcMatch[1];
   }
-  return url;
+  return isSafeHttpUrl(url) ? url : '';
 }
 
 // ── Render ──
 function renderPage() {
-  document.title = hotel.name + ' — Sahyadri Hotels';
+  document.title = hotel.name + ' - Sahyadri Hotels';
   document.querySelector('meta[name=description]').content = hotel.description ? hotel.description.slice(0, 160) : '';
 
   const imgs = Array.isArray(hotel.images) ? hotel.images : [];
@@ -359,7 +385,7 @@ function renderPage() {
   const rating = parseFloat(hotel.rating || 0).toFixed(1);
 
   if (imgs[0]) {
-    document.getElementById('hero-img').src = imgs[0];
+    if (isSafeHttpUrl(imgs[0])) document.getElementById('hero-img').src = imgs[0];
     document.getElementById('hero-img').alt = hotel.name;
   } else {
     document.getElementById('hotel-hero').style.background = 'linear-gradient(135deg, #13261E, #2E5540)';
@@ -382,8 +408,8 @@ function renderPage() {
 
   const gal = document.getElementById('gallery');
   if (imgs.length > 0) {
-    gal.innerHTML = imgs.slice(0, 3).map((url, i) =>
-      `<div class="gallery-cell"><img src="${url}" alt="${hotel.name} ${i+1}" loading="lazy"/></div>`
+    gal.innerHTML = imgs.filter(isSafeHttpUrl).slice(0, 3).map((url, i) =>
+      `<div class="gallery-cell"><img src="${escapeHtml(url)}" alt="${escapeHtml(hotel.name)} ${i+1}" loading="lazy"/></div>`
     ).join('');
   } else { gal.style.display = 'none'; }
 
@@ -392,7 +418,7 @@ function renderPage() {
 
   const amenArr = Array.isArray(hotel.amenities) ? hotel.amenities : [];
   document.getElementById('amenities-grid').innerHTML = amenArr.length
-    ? amenArr.map(a => `<div class="amenity-card">${amenityIcon()}<span>${a}</span></div>`).join('')
+    ? amenArr.map(a => `<div class="amenity-card">${amenityIcon()}<span>${escapeHtml(a)}</span></div>`).join('')
     : '<p style="color:#888;font-size:.85rem">No amenities listed.</p>';
 
   document.getElementById('loc-name').textContent = hotel.name;
@@ -401,8 +427,10 @@ function renderPage() {
   
   if (hotel.maps_link) {
     const embedUrl = convertToEmbedUrl(hotel.maps_link);
-    document.getElementById('map-iframe').src = embedUrl;
-    document.getElementById('map-container').style.display = 'block';
+    if (embedUrl) {
+      document.getElementById('map-iframe').src = embedUrl;
+      document.getElementById('map-container').style.display = 'block';
+    }
   }
 
   document.getElementById('w-price').textContent = price;
@@ -417,10 +445,10 @@ function renderPage() {
   const today = new Date();
   const ci = new Date(today); ci.setDate(ci.getDate() + 1);
   const co = new Date(today); co.setDate(co.getDate() + 3);
-  document.getElementById('w-checkin').value  = ci.toISOString().split('T')[0];
-  document.getElementById('w-checkout').value = co.toISOString().split('T')[0];
-  document.getElementById('w-checkin').min  = today.toISOString().split('T')[0];
-  document.getElementById('w-checkout').min = ci.toISOString().split('T')[0];
+  document.getElementById('w-checkin').value  = toDateInputValue(ci);
+  document.getElementById('w-checkout').value = toDateInputValue(co);
+  document.getElementById('w-checkin').min  = toDateInputValue(today);
+  document.getElementById('w-checkout').min = toDateInputValue(ci);
   document.getElementById('w-checkin').addEventListener('change', updateSummary);
   document.getElementById('w-checkout').addEventListener('change', updateSummary);
   updateSummary();
@@ -439,8 +467,8 @@ function updateSummary() {
     document.getElementById('s-nights').textContent = nights + ' night' + (nights > 1 ? 's' : '');
     document.getElementById('s-total').textContent  = '₹' + total.toLocaleString('en-IN');
   } else {
-    document.getElementById('s-nights').textContent = '—';
-    document.getElementById('s-total').textContent  = '—';
+    document.getElementById('s-nights').textContent = '-';
+    document.getElementById('s-total').textContent  = '-';
   }
 }
 
@@ -454,15 +482,15 @@ function bookWhatsApp() {
   const co = document.getElementById('w-checkout').value || 'TBD';
   const price = (hotel.price_per_night || 0).toLocaleString('en-IN');
   const msg = [
-    '🙏 Namaste! I would like to make a booking.', '',
-    '🏨 Hotel: ' + hotel.name,
-    '📍 Location: ' + (hotel.distance_from_temple || '') + ' from Bhimashankar Temple', '',
-    '📅 Check-In:  ' + ci,
-    '📅 Check-Out: ' + co,
-    '👥 Guests: '  + wGuests,
-    '🛏 Rooms: '   + wRooms, '',
-    '💰 Price: ₹' + price + ' / night', '',
-    'Please confirm availability. Thank you! 🙏'
+    'Namaste! I would like to make a booking.', '',
+    'Hotel: ' + hotel.name,
+    'Location: ' + (hotel.distance_from_temple || '') + ' from Bhimashankar Temple', '',
+    'Check-In:  ' + ci,
+    'Check-Out: ' + co,
+    'Guests: '  + wGuests,
+    'Rooms: '   + wRooms, '',
+    'Price: ₹' + price + ' / night', '',
+    'Please confirm availability. Thank you!'
   ].join('\n');
   const url = 'https://wa.me/919322273478?text=' + encodeURIComponent(msg);
   if (/Mobi|Android/i.test(navigator.userAgent)) window.location.href = url;
