@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Loading… — Sahyadri Hotels</title>
+<meta name="description" content="Premium stays near Bhimashankar Jyotirlinga Temple."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#C9A96E;--gold-light:#E4C98A;--green:#2E5540;--dark-green:#0A1611;--deep-green:#13261E;--cream:#F5EEE3;--cream2:#EDE8DF;--dark:#1a1a1a;--mid:#555;--wa:#25D366}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:#fff;color:var(--dark);overflow-x:hidden}
+a{-webkit-tap-highlight-color:transparent}
+img{max-width:100%;display:block}
+
+/* ── LOADING / ERROR ── */
+.fullscreen-state{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;background:#fff;z-index:9999}
+.spinner{width:40px;height:40px;border:3px solid rgba(46,85,64,.15);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.error-icon{font-size:3rem}
+.error-msg{font-size:1rem;color:var(--mid);text-align:center;max-width:360px;line-height:1.5}
+.error-link{margin-top:.5rem;text-decoration:none;color:var(--green);font-size:.85rem;font-weight:600}
+#page{display:none}
+
+/* ── NAVBAR ── */
+.navbar{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:.9rem 3rem;background:var(--deep-green);border-bottom:1px solid rgba(255,255,255,.08)}
+.nav-back{display:flex;align-items:center;gap:.5rem;color:rgba(255,255,255,.8);text-decoration:none;font-size:.82rem;font-weight:500;letter-spacing:.04em;transition:color .2s}
+.nav-back:hover{color:var(--gold-light)}
+.nav-logo img{height:60px;width:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}
+.nav-book-btn{text-decoration:none;color:var(--gold-light);border:1.5px solid var(--gold);padding:.55rem 1.4rem;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;transition:all .25s}
+.nav-book-btn:hover{background:var(--gold);color:var(--dark-green)}
+
+/* ── HERO ── */
+.hero{position:relative;height:70vh;min-height:420px;overflow:hidden;background:var(--deep-green)}
+.hero img{width:100%;height:100%;object-fit:cover;object-position:center}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.82) 0%,rgba(0,0,0,.3) 50%,rgba(0,0,0,.15) 100%)}
+.hero-content{position:absolute;bottom:2.5rem;left:3rem;right:3rem}
+.hero-tag{display:inline-block;background:var(--gold);color:#111;font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;margin-bottom:.75rem}
+.hero-name{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);color:#fff;line-height:1.2;margin-bottom:.4rem}
+.hero-brand{font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+.hero-meta{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.hero-rating{display:flex;align-items:center;gap:.4rem;color:#fff;font-size:.88rem;font-weight:600}
+.hero-stars{color:var(--gold)}
+.hero-dist{display:flex;align-items:center;gap:.4rem;color:rgba(255,255,255,.85);font-size:.85rem}
+.hero-price{color:#fff;font-size:1.05rem;font-weight:700}
+.hero-price span{font-size:.75rem;font-weight:400;opacity:.8}
+
+/* ── LAYOUT ── */
+.page-body{max-width:1280px;margin:0 auto;padding:2.5rem 3rem 4rem;display:grid;grid-template-columns:1fr 360px;gap:3rem;align-items:start}
+
+/* ── CONTENT ── */
+.section-label{font-size:.68rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
+.section-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:500;color:var(--dark);margin-bottom:1.2rem}
+.about-text{font-size:.95rem;line-height:1.75;color:var(--mid);white-space:pre-wrap}
+.content-section{margin-bottom:3rem}
+
+/* Gallery */
+.gallery{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:200px 200px;gap:.75rem;border-radius:16px;overflow:hidden;margin-bottom:2.5rem}
+.gallery-cell{overflow:hidden;position:relative;cursor:pointer;background:var(--cream2)}
+.gallery-cell img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.gallery-cell:hover img{transform:scale(1.06)}
+.gallery-cell:first-child{grid-row:1/3}
+
+/* Amenities */
+.amenities-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.75rem}
+.amenity-card{display:flex;align-items:center;gap:.65rem;padding:.8rem 1rem;background:var(--cream);border-radius:12px;font-size:.82rem;font-weight:500;color:var(--dark);border:1px solid rgba(0,0,0,.06);transition:all .2s}
+.amenity-card:hover{background:#e8f2ec;border-color:var(--green)}
+.amenity-icon{width:20px;height:20px;flex-shrink:0;color:var(--green)}
+
+/* Location & Maps */
+.location-card{background:linear-gradient(135deg,#f0f7f3,#e8f2ec);border:1px solid rgba(46,85,64,.15);border-radius:16px;padding:1.5rem;display:flex;align-items:center;gap:1.5rem;margin-bottom:1.5rem}
+.location-icon{width:52px;height:52px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.location-icon svg{color:#fff}
+.location-text h3{font-size:1rem;font-weight:600;color:var(--dark);margin-bottom:.25rem}
+.location-text p{font-size:.84rem;color:var(--mid)}
+.map-container{width:100%;height:300px;border-radius:16px;overflow:hidden;border:1px solid rgba(0,0,0,.1)}
+.map-container iframe{width:100%;height:100%;border:0}
+
+/* ── BOOKING WIDGET ── */
+.booking-widget{position:sticky;top:80px;background:#fff;border:1.5px solid rgba(0,0,0,.1);border-radius:20px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.1)}
+.widget-top{background:var(--deep-green);padding:1.4rem 1.5rem}
+.widget-price{font-size:1.8rem;font-weight:700;color:#fff}
+.widget-price span{font-size:.82rem;font-weight:400;color:rgba(255,255,255,.7)}
+.widget-rating{display:flex;align-items:center;gap:.4rem;margin-top:.35rem;font-size:.82rem;color:rgba(255,255,255,.85)}
+.widget-stars{color:var(--gold)}
+.widget-body{padding:1.4rem 1.5rem}
+.widget-row{margin-bottom:1rem}
+.widget-label{font-size:.65rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--mid);margin-bottom:.4rem}
+.widget-date-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.widget-field{background:var(--cream);border:1.5px solid rgba(0,0,0,.08);border-radius:10px;padding:.65rem .9rem;cursor:pointer;transition:border .2s}
+.widget-field:focus-within{border-color:var(--green)}
+.widget-field input[type=date]{width:100%;background:transparent;border:none;outline:none;font-size:.82rem;font-family:'DM Sans',sans-serif;color:var(--dark);cursor:pointer}
+.widget-field input[type=date]::-webkit-calendar-picker-indicator{opacity:.5;cursor:pointer}
+.counter-row{display:flex;align-items:center;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid rgba(0,0,0,.06)}
+.counter-row:last-child{border-bottom:none}
+.counter-lbl{font-size:.85rem;color:var(--dark)}
+.counter-ctrl{display:flex;align-items:center;gap:.75rem}
+.ctr-btn{width:30px;height:30px;border-radius:8px;border:1.5px solid var(--green);background:transparent;color:var(--green);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:'DM Sans',sans-serif}
+.ctr-btn:hover{background:var(--green);color:#fff}
+.ctr-val{font-size:.95rem;font-weight:700;color:var(--dark);min-width:20px;text-align:center}
+.summary-box{background:var(--cream);border-radius:12px;padding:1rem 1.1rem;margin-bottom:1.2rem}
+.summary-row{display:flex;justify-content:space-between;font-size:.82rem;padding:.3rem 0}
+.summary-row .s-lbl{color:var(--mid)}
+.summary-row .s-val{font-weight:600;color:var(--dark)}
+.summary-divider{border-top:1px solid rgba(0,0,0,.08);margin:.5rem 0}
+.summary-total .s-lbl,.summary-total .s-val{font-size:.9rem;font-weight:700;color:var(--dark)}
+.wa-btn{width:100%;padding:1rem;background:var(--wa);color:#fff;border:none;border-radius:12px;font-size:.88rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:background .2s;font-family:'DM Sans',sans-serif}
+.wa-btn:hover{background:#1db954}
+.widget-note{text-align:center;font-size:.7rem;color:#aaa;margin-top:.85rem}
+
+/* ── FOOTER ── */
+.site-footer{background:var(--dark-green);color:rgba(255,255,255,.6);padding:1.5rem 3rem;display:flex;align-items:center;justify-content:space-between;font-size:.75rem;flex-wrap:wrap;gap:.75rem}
+.site-footer strong{color:var(--gold)}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--gold-light)}
+
+/* ── MOBILE ── */
+@media(max-width:900px){
+  .page-body{grid-template-columns:1fr;padding:1.5rem}
+  .booking-widget{position:static}
+  .hero-content{left:1.5rem;right:1.5rem;bottom:1.5rem}
+  .hero{height:55vh;min-height:300px}
+  .navbar{padding:.75rem 1.25rem}
+  .nav-logo img{height:44px}
+}
+@media(max-width:600px){
+  .gallery{grid-template-columns:1fr;grid-template-rows:220px 140px 140px}
+  .gallery-cell:first-child{grid-row:auto}
+  .widget-date-row{grid-template-columns:1fr}
+  .page-body{padding:1rem 1rem 3rem}
+  .hero-name{font-size:1.7rem}
+  .site-footer{padding:1rem;flex-direction:column;text-align:center}
+  .footer-links{justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- Loading State -->
+<div class="fullscreen-state" id="loading-state">
+  <div class="spinner"></div>
+  <p style="color:#888;font-size:.85rem">Loading hotel details…</p>
+</div>
+
+<!-- Error State -->
+<div class="fullscreen-state" id="error-state" style="display:none">
+  <div class="error-icon">🏔</div>
+  <p class="error-msg" id="error-msg">This hotel could not be found. It may have been moved or removed.</p>
+  <a href="index.html" class="error-link">← Back to all stays</a>
+</div>
+
+<!-- Main Page -->
+<div id="page">
+  <nav class="navbar">
+    <a class="nav-back" href="index.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      All Stays
+    </a>
+    <a href="index.html"><img src="logo.png" alt="Sahyadri Hotels" style="height:60px"/></a>
+    <a class="nav-book-btn" href="#booking-widget">Book Now</a>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero" id="hotel-hero">
+    <img id="hero-img" src="" alt=""/>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-tag" id="hero-brand" style="display:none"></div>
+      <h1 class="hero-name" id="hero-name"></h1>
+      <div class="hero-meta">
+        <div class="hero-rating">
+          <span class="hero-stars" id="hero-stars"></span>
+          <span id="hero-rating-val"></span>
+        </div>
+        <div class="hero-dist" id="hero-dist-container" style="display:none">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span id="hero-dist"></span>
+        </div>
+        <div class="hero-price">₹<span id="hero-price"></span> <span>/ night</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="page-body">
+    <!-- Left: Content -->
+    <div>
+      <!-- Gallery -->
+      <div class="gallery" id="gallery"></div>
+
+      <!-- About -->
+      <div class="content-section">
+        <p class="section-label">About this stay</p>
+        <h2 class="section-title" id="about-name"></h2>
+        <p class="about-text" id="about-desc"></p>
+      </div>
+
+      <!-- Amenities -->
+      <div class="content-section">
+        <p class="section-label">What's included</p>
+        <h2 class="section-title">Amenities &amp; Features</h2>
+        <div class="amenities-grid" id="amenities-grid"></div>
+      </div>
+
+      <!-- Location -->
+      <div class="content-section">
+        <p class="section-label">Getting here</p>
+        <h2 class="section-title">Location</h2>
+        <div class="location-card">
+          <div class="location-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div class="location-text">
+            <h3 id="loc-name"></h3>
+            <p id="loc-dist"></p>
+            <p id="loc-location" style="font-size:.84rem;color:#555;margin-top:.25rem"></p>
+          </div>
+        </div>
+        
+        <div class="map-container" id="map-container" style="display:none">
+          <iframe id="map-iframe" src="" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Booking Widget -->
+    <aside>
+      <div class="booking-widget" id="booking-widget">
+        <div class="widget-top">
+          <div class="widget-price">₹<span id="w-price"></span> <span>/ night</span></div>
+          <div class="widget-rating">
+            <span class="widget-stars" id="w-stars"></span>
+            <span id="w-rating"></span><span id="w-dist-span">&nbsp;&middot;&nbsp;<span id="w-dist"></span> from temple</span>
+          </div>
+        </div>
+        <div class="widget-body">
+          <div class="widget-row">
+            <div class="widget-label">Dates</div>
+            <div class="widget-date-row">
+              <div class="widget-field">
+                <div style="font-size:.62rem;color:#888;text-transform:uppercase;letter-spacing:.1em">Check-In</div>
+                <input type="date" id="w-checkin"/>
+              </div>
+              <div class="widget-field">
+                <div style="font-size:.62rem;color:#888;text-transform:uppercase;letter-spacing:.1em">Check-Out</div>
+                <input type="date" id="w-checkout"/>
+              </div>
+            </div>
+          </div>
+          <div class="widget-row">
+            <div class="widget-label">Guests &amp; Rooms</div>
+            <div class="counter-row">
+              <span class="counter-lbl">Guests</span>
+              <div class="counter-ctrl">
+                <button class="ctr-btn" onclick="changeW('guests',-1)">−</button>
+                <span class="ctr-val" id="w-guests">2</span>
+                <button class="ctr-btn" onclick="changeW('guests',1)">+</button>
+              </div>
+            </div>
+            <div class="counter-row">
+              <span class="counter-lbl">Rooms</span>
+              <div class="counter-ctrl">
+                <button class="ctr-btn" onclick="changeW('rooms',-1)">−</button>
+                <span class="ctr-val" id="w-rooms">1</span>
+                <button class="ctr-btn" onclick="changeW('rooms',1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="summary-box" id="summary-box">
+            <div class="summary-row"><span class="s-lbl">Price per night</span><span class="s-val" id="s-ppn"></span></div>
+            <div class="summary-row"><span class="s-lbl">Rooms</span><span class="s-val" id="s-rooms">1</span></div>
+            <div class="summary-row"><span class="s-lbl">Nights</span><span class="s-val" id="s-nights">—</span></div>
+            <div class="summary-divider"></div>
+            <div class="summary-row summary-total"><span class="s-lbl">Estimated Total</span><span class="s-val" id="s-total">—</span></div>
+          </div>
+          <button class="wa-btn" onclick="bookWhatsApp()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Book via WhatsApp
+          </button>
+          <p class="widget-note">You'll be redirected to WhatsApp with your booking details pre-filled</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <span>&#169; 2025 <strong>Sahyadri Hotels</strong>. Serene, Trustworthy, Grounded.</span>
+    <div class="footer-links">
+      <a href="#">Support</a><a href="#">Privacy</a><a href="#">Terms</a>
+    </div>
+  </footer>
+</div>
+
+<script src="/api/config"></script>
+<script>
+let hotel = null;
+let wGuests = 2, wRooms = 1;
+
+function getSlug() { return new URLSearchParams(window.location.search).get('slug'); }
+
+async function loadHotel() {
+  const slug = getSlug();
+  if (!slug) { showError('No hotel specified.'); return; }
+  
+  try {
+    const url = `${window.SUPABASE_URL}/rest/v1/hotels?slug=eq.${slug}&is_active=eq.true&select=*`;
+    const resp = await fetch(url, { headers: { 'apikey': window.SUPABASE_ANON_KEY } });
+    const data = await resp.json();
+    
+    if (!data || data.length === 0) {
+      showError('This hotel could not be found. It may have been removed or made inactive.');
+      return;
+    }
+    hotel = data[0];
+    renderPage();
+  } catch(e) {
+    showError('Error loading hotel: ' + e.message);
+  }
+}
+
+function showError(msg) {
+  document.getElementById('loading-state').style.display = 'none';
+  document.getElementById('error-state').style.display = 'flex';
+  document.getElementById('error-msg').textContent = msg;
+}
+
+// ── Stars ──
+function starsHtml(rating, color) {
+  let s = '';
+  const r = parseFloat(rating) || 0;
+  for (let i = 1; i <= 5; i++) {
+    const filled = r >= i ? 1 : r >= i - 0.5 ? 0.5 : 0;
+    s += `<svg width="14" height="14" viewBox="0 0 24 24" fill="${filled > 0 ? color || 'currentColor' : 'none'}" stroke="${color || 'currentColor'}" stroke-width="1.5" style="opacity:${filled === 0.5 ? .5 : 1}"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+  }
+  return s;
+}
+function amenityIcon() { return `<svg class="amenity-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>`; }
+
+function convertToEmbedUrl(url) {
+  // Convert standard maps link to embed URL if possible, otherwise use as-is (might refuse to connect if not embed)
+  if (url && url.includes('<iframe')) {
+    const srcMatch = url.match(/src="([^"]+)"/);
+    if (srcMatch) return srcMatch[1];
+  }
+  return url;
+}
+
+// ── Render ──
+function renderPage() {
+  document.title = hotel.name + ' — Sahyadri Hotels';
+  document.querySelector('meta[name=description]').content = hotel.description ? hotel.description.slice(0, 160) : '';
+
+  const imgs = Array.isArray(hotel.images) ? hotel.images : [];
+  const price = (hotel.price_per_night || 0).toLocaleString('en-IN');
+  const rating = parseFloat(hotel.rating || 0).toFixed(1);
+
+  if (imgs[0]) {
+    document.getElementById('hero-img').src = imgs[0];
+    document.getElementById('hero-img').alt = hotel.name;
+  } else {
+    document.getElementById('hotel-hero').style.background = 'linear-gradient(135deg, #13261E, #2E5540)';
+  }
+  
+  if (hotel.brand) {
+    document.getElementById('hero-brand').textContent = hotel.brand;
+    document.getElementById('hero-brand').style.display = 'inline-block';
+  }
+  document.getElementById('hero-name').textContent = hotel.name;
+  document.getElementById('hero-stars').innerHTML = starsHtml(hotel.rating, '#C9A96E');
+  document.getElementById('hero-rating-val').textContent = rating;
+  
+  if (hotel.distance_from_temple) {
+    document.getElementById('hero-dist').textContent = hotel.distance_from_temple + ' from Temple';
+    document.getElementById('hero-dist-container').style.display = 'flex';
+  }
+  
+  document.getElementById('hero-price').textContent = price;
+
+  const gal = document.getElementById('gallery');
+  if (imgs.length > 0) {
+    gal.innerHTML = imgs.slice(0, 3).map((url, i) =>
+      `<div class="gallery-cell"><img src="${url}" alt="${hotel.name} ${i+1}" loading="lazy"/></div>`
+    ).join('');
+  } else { gal.style.display = 'none'; }
+
+  document.getElementById('about-name').textContent = hotel.name;
+  document.getElementById('about-desc').textContent = hotel.description || '';
+
+  const amenArr = Array.isArray(hotel.amenities) ? hotel.amenities : [];
+  document.getElementById('amenities-grid').innerHTML = amenArr.length
+    ? amenArr.map(a => `<div class="amenity-card">${amenityIcon()}<span>${a}</span></div>`).join('')
+    : '<p style="color:#888;font-size:.85rem">No amenities listed.</p>';
+
+  document.getElementById('loc-name').textContent = hotel.name;
+  document.getElementById('loc-dist').textContent = hotel.distance_from_temple ? hotel.distance_from_temple + ' from Bhimashankar Jyotirlinga Temple' : 'Near Bhimashankar Temple';
+  document.getElementById('loc-location').textContent = hotel.location || '';
+  
+  if (hotel.maps_link) {
+    const embedUrl = convertToEmbedUrl(hotel.maps_link);
+    document.getElementById('map-iframe').src = embedUrl;
+    document.getElementById('map-container').style.display = 'block';
+  }
+
+  document.getElementById('w-price').textContent = price;
+  document.getElementById('w-stars').innerHTML = starsHtml(hotel.rating, '#C9A96E');
+  document.getElementById('w-rating').textContent = rating;
+  
+  if (hotel.distance_from_temple) document.getElementById('w-dist').textContent = hotel.distance_from_temple;
+  else document.getElementById('w-dist-span').style.display = 'none';
+  
+  document.getElementById('s-ppn').textContent = '₹' + price;
+
+  const today = new Date();
+  const ci = new Date(today); ci.setDate(ci.getDate() + 1);
+  const co = new Date(today); co.setDate(co.getDate() + 3);
+  document.getElementById('w-checkin').value  = ci.toISOString().split('T')[0];
+  document.getElementById('w-checkout').value = co.toISOString().split('T')[0];
+  document.getElementById('w-checkin').min  = today.toISOString().split('T')[0];
+  document.getElementById('w-checkout').min = ci.toISOString().split('T')[0];
+  document.getElementById('w-checkin').addEventListener('change', updateSummary);
+  document.getElementById('w-checkout').addEventListener('change', updateSummary);
+  updateSummary();
+
+  document.getElementById('loading-state').style.display = 'none';
+  document.getElementById('page').style.display = 'block';
+}
+
+function updateSummary() {
+  const ci = document.getElementById('w-checkin').value;
+  const co = document.getElementById('w-checkout').value;
+  document.getElementById('s-rooms').textContent = wRooms;
+  if (ci && co) {
+    const nights = Math.max(1, Math.round((new Date(co) - new Date(ci)) / 86400000));
+    const total  = (hotel.price_per_night || 0) * nights * wRooms;
+    document.getElementById('s-nights').textContent = nights + ' night' + (nights > 1 ? 's' : '');
+    document.getElementById('s-total').textContent  = '₹' + total.toLocaleString('en-IN');
+  } else {
+    document.getElementById('s-nights').textContent = '—';
+    document.getElementById('s-total').textContent  = '—';
+  }
+}
+
+function changeW(type, delta) {
+  if (type === 'guests') { wGuests = Math.max(1, Math.min(20, wGuests + delta)); document.getElementById('w-guests').textContent = wGuests; }
+  else { wRooms = Math.max(1, Math.min(10, wRooms + delta)); document.getElementById('w-rooms').textContent = wRooms; updateSummary(); }
+}
+
+function bookWhatsApp() {
+  const ci = document.getElementById('w-checkin').value  || 'TBD';
+  const co = document.getElementById('w-checkout').value || 'TBD';
+  const price = (hotel.price_per_night || 0).toLocaleString('en-IN');
+  const msg = [
+    '🙏 Namaste! I would like to make a booking.', '',
+    '🏨 Hotel: ' + hotel.name,
+    '📍 Location: ' + (hotel.distance_from_temple || '') + ' from Bhimashankar Temple', '',
+    '📅 Check-In:  ' + ci,
+    '📅 Check-Out: ' + co,
+    '👥 Guests: '  + wGuests,
+    '🛏 Rooms: '   + wRooms, '',
+    '💰 Price: ₹' + price + ' / night', '',
+    'Please confirm availability. Thank you! 🙏'
+  ].join('\n');
+  const url = 'https://wa.me/919322273478?text=' + encodeURIComponent(msg);
+  if (/Mobi|Android/i.test(navigator.userAgent)) window.location.href = url;
+  else window.open(url, '_blank');
+}
+
+loadHotel();
+</script>
+</body>
+</html>

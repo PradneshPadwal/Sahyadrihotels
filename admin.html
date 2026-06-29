@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin — Sahyadri Hotels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A96E;--gold-light:#E4C98A;
+  --bg:#0a0f0d;--surface:#111a15;--surface2:#1a2820;
+  --border:rgba(255,255,255,.08);--text:#f0f0f0;--muted:rgba(255,255,255,.5);
+  --green:#2E5540;--green-light:#3a6b50;--red:#e05555;--wa:#25D366;
+}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+
+/* ── LOGIN ── */
+#login-screen{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#060e09 0%,#0d1f15 100%); transition: opacity .3s}
+.login-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:3rem 2.5rem;
+  width:100%;max-width:420px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.login-logo{width:120px;margin:0 auto 1.5rem;filter:drop-shadow(0 4px 16px rgba(0,0,0,.5))}
+.login-title{font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:.3rem}
+.login-sub{font-size:.8rem;color:var(--muted);margin-bottom:2rem;letter-spacing:.05em}
+.login-input{width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--border);border-radius:10px;
+  padding:.85rem 1.1rem;color:#fff;font-size:.9rem;font-family:'DM Sans',sans-serif;outline:none;transition:border .2s}
+.login-input:focus{border-color:var(--gold)}
+.login-btn{margin-top:1rem;width:100%;padding:.9rem;background:var(--gold);color:#111;
+  border:none;border-radius:10px;font-size:.88rem;font-weight:700;letter-spacing:.1em;
+  cursor:pointer;transition:background .2s}
+.login-btn:hover{background:var(--gold-light)}
+.login-btn:disabled{opacity:0.7;cursor:wait}
+.login-error{margin-top:.75rem;font-size:.8rem;color:#e05555;min-height:1rem}
+
+/* ── MAIN LAYOUT ── */
+#admin-app{display:none;min-height:100vh;flex-direction:column}
+#admin-app.visible{display:flex}
+.admin-header{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:.9rem 2rem}
+.admin-brand{display:flex;align-items:center;gap:.75rem}
+.admin-brand img{height:36px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}
+.admin-brand-text{font-family:'Playfair Display',serif;font-size:1rem;color:var(--gold)}
+.header-right{display:flex;align-items:center;gap:.75rem}
+.btn-logout{background:transparent;border:1.5px solid var(--border);border-radius:8px;color:var(--muted);
+  padding:.5rem 1rem;font-size:.78rem;cursor:pointer;transition:all .2s}
+.btn-logout:hover{border-color:var(--red);color:var(--red)}
+.btn-add{background:var(--gold);color:#111;border:none;border-radius:8px;padding:.6rem 1.4rem;
+  font-size:.82rem;font-weight:700;cursor:pointer;transition:background .2s;display:flex;align-items:center;gap:.4rem}
+.btn-add:hover{background:var(--gold-light)}
+
+.admin-main{flex:1;padding:2rem;max-width:1400px;margin:0 auto;width:100%}
+
+/* Hotels Grid */
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.section-head h2{font-family:'Playfair Display',serif;font-size:1.3rem}
+.hotels-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.25rem}
+.hotel-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;
+  transition:border-color .2s;display:flex;flex-direction:column}
+.hotel-card:hover{border-color:rgba(201,169,110,.3)}
+.hotel-card-img{height:180px;overflow:hidden;position:relative;background:#0d1a12}
+.hotel-card-img img{width:100%;height:100%;object-fit:cover}
+.hotel-card-img .no-img{display:flex;align-items:center;justify-content:center;height:100%;
+  color:var(--muted);font-size:.8rem;flex-direction:column;gap:.5rem}
+.badge-inactive{position:absolute;top:.75rem;right:.75rem;background:rgba(224,85,85,.85);
+  color:#fff;font-size:.65rem;font-weight:700;letter-spacing:.1em;padding:.25rem .6rem;border-radius:20px}
+.badge-rank{position:absolute;top:.75rem;left:.75rem;background:rgba(201,169,110,.9);
+  color:#111;font-size:.65rem;font-weight:700;letter-spacing:.1em;padding:.25rem .6rem;border-radius:20px}
+.hotel-card-body{padding:1.1rem 1.25rem;flex:1;display:flex;flex-direction:column}
+.hc-name{font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:.2rem}
+.hc-brand{font-size:.72rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.6rem}
+.hc-meta{display:flex;align-items:center;gap:.75rem;margin-bottom:.9rem;flex-wrap:wrap}
+.hc-rating{display:flex;align-items:center;gap:.25rem;font-size:.82rem;font-weight:600;color:#f0c040}
+.hc-price{font-size:.85rem;font-weight:700;color:var(--text)}
+.hc-dist{font-size:.72rem;color:var(--muted);width:100%;margin-top:-.4rem;margin-bottom:.5rem}
+.hc-actions{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-top:auto}
+.btn-sm{padding:.45rem .9rem;border-radius:8px;font-size:.72rem;font-weight:600;cursor:pointer;
+  border:1.5px solid;transition:all .2s;font-family:'DM Sans',sans-serif}
+.btn-edit{border-color:var(--gold);color:var(--gold);background:transparent}
+.btn-edit:hover{background:var(--gold);color:#111}
+.btn-toggle{border-color:var(--green-light);color:var(--green-light);background:transparent}
+.btn-toggle:hover{background:var(--green-light);color:#fff}
+.btn-toggle.inactive{border-color:var(--muted);color:var(--muted)}
+.btn-del{border-color:var(--red);color:var(--red);background:transparent}
+.btn-del:hover{background:var(--red);color:#fff}
+
+/* Empty / Loading */
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--muted)}
+.empty-state svg{opacity:.3;margin-bottom:1rem}
+.loading-spinner{text-align:center;padding:3rem;color:var(--muted);font-size:.85rem}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.75);
+  display:flex;align-items:flex-start;justify-content:center;padding:1.5rem;overflow-y:auto;
+  opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;width:100%;
+  max-width:740px;margin:auto;box-shadow:0 40px 100px rgba(0,0,0,.7);
+  transform:translateY(20px);transition:transform .3s;overflow:hidden}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-head{background:var(--surface2);padding:1.4rem 1.75rem;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border)}
+.modal-title{font-family:'Playfair Display',serif;font-size:1.15rem}
+.modal-close{background:transparent;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer;
+  width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:all .2s}
+.modal-close:hover{background:rgba(255,255,255,.08);color:#fff}
+.modal-body{padding:1.75rem}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.form-group{display:flex;flex-direction:column;gap:.4rem}
+.form-group.full{grid-column:1/-1}
+.form-label{font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;display:flex;justify-content:space-between}
+.form-input,.form-textarea,.form-select{width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--border);
+  border-radius:10px;padding:.7rem 1rem;color:#fff;font-size:.88rem;font-family:'DM Sans',sans-serif;
+  outline:none;transition:border .2s}
+.form-input:focus,.form-textarea:focus,.form-select:focus{border-color:var(--gold)}
+.form-textarea{resize:vertical;min-height:90px}
+.form-select option{background:#111;color:#fff}
+.form-hint{font-size:.68rem;color:var(--muted);margin-top:.2rem}
+.form-slug-preview{font-size:.72rem;color:var(--gold);margin-top:.2rem;font-family:monospace}
+.char-count{color:var(--gold);font-size:.68rem}
+.error-msg-input{color:var(--red);font-size:.68rem;display:none;margin-top:.2rem}
+
+/* Image Upload */
+.img-upload-zone{border:2px dashed var(--border);border-radius:12px;padding:1.5rem;text-align:center;
+  cursor:pointer;transition:all .2s}
+.img-upload-zone:hover,.img-upload-zone.dragover{border-color:var(--gold);background:rgba(201,169,110,.05)}
+.img-upload-zone input{display:none}
+.img-upload-label{display:flex;flex-direction:column;align-items:center;gap:.5rem;cursor:pointer}
+.img-upload-icon{width:36px;height:36px;color:var(--muted)}
+.img-upload-text{font-size:.8rem;color:var(--muted)}
+.img-upload-text strong{color:var(--gold)}
+.img-previews{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:.5rem;margin-top:.75rem}
+.img-preview-item{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.img-preview-item img{width:100%;height:100%;object-fit:cover}
+.img-preview-item .remove-img{position:absolute;top:2px;right:2px;width:18px;height:18px;
+  background:rgba(224,85,85,.9);border-radius:50%;border:none;color:#fff;cursor:pointer;
+  font-size:.7rem;display:flex;align-items:center;justify-content:center;line-height:1}
+.upload-progress{margin-top:.5rem;font-size:.75rem;color:var(--gold)}
+
+/* Tags input */
+.tags-container{display:flex;flex-wrap:wrap;gap:.4rem;background:rgba(255,255,255,.05);
+  border:1.5px solid var(--border);border-radius:10px;padding:.5rem .7rem;min-height:44px;cursor:text;transition:border .2s}
+.tags-container:focus-within{border-color:var(--gold)}
+.tag-pill{display:inline-flex;align-items:center;gap:.3rem;background:rgba(201,169,110,.15);
+  color:var(--gold-light);border-radius:20px;padding:.2rem .6rem;font-size:.72rem;font-weight:500}
+.tag-pill button{background:none;border:none;color:var(--gold);cursor:pointer;font-size:.8rem;line-height:1;padding:0}
+.tags-input{background:none;border:none;outline:none;color:#fff;font-size:.82rem;font-family:'DM Sans',sans-serif;
+  flex:1;min-width:80px;padding:.1rem .3rem}
+
+/* Rating input - Clickable Stars */
+.star-rating{display:flex;align-items:center;gap:.3rem;margin-top:.2rem}
+.star-rating svg{width:28px;height:28px;cursor:pointer;color:var(--border);transition:color .2s}
+.star-rating svg.active{color:#f0c040;fill:#f0c040}
+
+/* Modal footer */
+.modal-foot{padding:1.25rem 1.75rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:flex-end;gap:.75rem}
+.btn-cancel{background:transparent;border:1.5px solid var(--border);border-radius:10px;color:var(--muted);
+  padding:.7rem 1.5rem;font-size:.82rem;cursor:pointer;transition:all .2s}
+.btn-cancel:hover{border-color:rgba(255,255,255,.2);color:#fff}
+.btn-submit{background:var(--gold);color:#111;border:none;border-radius:10px;padding:.7rem 1.8rem;
+  font-size:.85rem;font-weight:700;cursor:pointer;transition:background .2s;display:flex;align-items:center;gap:.4rem}
+.btn-submit:hover{background:var(--gold-light)}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed}
+
+/* Toast */
+.toast-wrap{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;display:flex;flex-direction:column;gap:.5rem}
+.toast{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.8rem 1.2rem;
+  font-size:.82rem;display:flex;align-items:center;gap:.5rem;box-shadow:0 8px 24px rgba(0,0,0,.4);
+  animation:toastIn .3s ease;color:#fff}
+.toast.success{border-left:3px solid var(--green-light)}
+.toast.error{border-left:3px solid var(--red)}
+.toast.info{border-left:3px solid var(--gold)}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:640px){
+  .form-grid{grid-template-columns:1fr}
+  .admin-main{padding:1rem}
+  .modal-body{padding:1.25rem}
+  .admin-header{padding:.75rem 1rem}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-box">
+    <img class="login-logo" src="logo.png" alt="Sahyadri Hotels"/>
+    <h1 class="login-title">Admin Panel</h1>
+    <p class="login-sub">Sahyadri Hotels Management System</p>
+    <input type="password" id="login-pass" class="login-input" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button class="login-btn" id="btn-signin" onclick="doLogin()">Sign In</button>
+    <p class="login-error" id="login-err"></p>
+  </div>
+</div>
+
+<!-- ADMIN APP -->
+<div id="admin-app">
+  <header class="admin-header">
+    <div class="admin-brand">
+      <img src="logo.png" alt="Logo"/>
+      <span class="admin-brand-text">Admin Dashboard</span>
+    </div>
+    <div class="header-right">
+      <button class="btn-add" onclick="openAddModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Hotel
+      </button>
+      <button class="btn-logout" onclick="doLogout()">Logout</button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <div class="section-head">
+      <h2>All Hotels</h2>
+    </div>
+    <div id="hotels-grid" class="hotels-grid">
+      <div class="loading-spinner">Loading hotels…</div>
+    </div>
+  </main>
+</div>
+
+<!-- ADD/EDIT HOTEL MODAL -->
+<div class="modal-overlay" id="hotel-modal" onclick="closeModalOnOverlay(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 class="modal-title" id="modal-title">Add New Hotel</h3>
+      <button class="modal-close" onclick="closeHotelModal()">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-hotel-id"/>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Hotel Name *</label>
+          <input type="text" id="f-name" class="form-input" placeholder="e.g. Forest View Cottage" oninput="updateSlugPreview()"/>
+          <div class="form-slug-preview" id="slug-preview"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Brand Name</label>
+          <input type="text" id="f-brand" class="form-input" placeholder="e.g. Rudrya Hospitality"/>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Description * <span class="char-count" id="desc-count">0 / 500</span></label>
+          <textarea id="f-desc" class="form-textarea" placeholder="Max 500 characters…" maxlength="500" oninput="updateDescCount()"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Star Rating (1-5) *</label>
+          <div class="star-rating" id="f-rating">
+            <svg onclick="setRating(1)" viewBox="0 0 24 24" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg onclick="setRating(2)" viewBox="0 0 24 24" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg onclick="setRating(3)" viewBox="0 0 24 24" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg onclick="setRating(4)" viewBox="0 0 24 24" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg onclick="setRating(5)" viewBox="0 0 24 24" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <input type="hidden" id="f-rating-val" value="5"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Manual Rank (Optional)</label>
+          <input type="number" id="f-rank" class="form-input" placeholder="e.g. 1 (Top position)" min="1"/>
+          <div class="form-hint">Overrides star rating for sorting</div>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Google Maps Link</label>
+          <input type="text" id="f-maps" class="form-input" placeholder="https://maps.google.com/..." oninput="validateMapsLink()"/>
+          <div class="error-msg-input" id="maps-err">Invalid Google Maps link</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Location</label>
+          <input type="text" id="f-location" class="form-input" placeholder="e.g. Bhimashankar"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Distance from Temple</label>
+          <input type="text" id="f-dist" class="form-input" placeholder="e.g. 800 m or 1.5 km"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Price per Night (₹) *</label>
+          <input type="number" id="f-price" class="form-input" placeholder="e.g. 2499" min="100"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select id="f-active" class="form-select">
+            <option value="true">Active (Visible)</option>
+            <option value="false">Inactive (Hidden)</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Amenities</label>
+          <div class="tags-container" id="amenity-tags-container" onclick="document.getElementById('amenity-input').focus()">
+            <input type="text" id="amenity-input" class="tags-input" placeholder="Type amenity, press Enter…" onkeydown="handleAmenityKey(event)"/>
+          </div>
+          <div class="form-hint">Press Enter or comma after each amenity</div>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Hotel Images (Max 4)</label>
+          <div class="img-upload-zone" id="upload-zone" onclick="document.getElementById('img-file-input').click()"
+            ondragover="event.preventDefault();this.classList.add('dragover')"
+            ondragleave="this.classList.remove('dragover')"
+            ondrop="handleDrop(event)">
+            <label class="img-upload-label">
+              <svg class="img-upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+              </svg>
+              <div class="img-upload-text"><strong>Click to upload</strong> or drag &amp; drop<br/><span>Up to 4 images allowed</span></div>
+            </label>
+            <input type="file" id="img-file-input" accept="image/*" multiple onchange="handleFileSelect(event)"/>
+          </div>
+          <div id="upload-progress" class="upload-progress" style="display:none"></div>
+          <div id="img-previews" class="img-previews"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeHotelModal()">Cancel</button>
+      <button class="btn-submit" id="submit-btn" onclick="submitHotel()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Save Hotel
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<!-- Include config from Vercel API -->
+<script src="/api/config"></script>
+<script>
+let authHash = sessionStorage.getItem('sh_admin_hash') || null;
+let allHotels = [];
+let editingHotelId = null;
+let pendingImages = []; 
+let uploadedUrls = [];  
+let amenities = [];
+
+// ── Crypto Hash ──
+async function hashString(str) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+  return Array.prototype.map.call(new Uint8Array(buf), x => (('00'+x.toString(16)).slice(-2))).join('');
+}
+
+// ── Login ──
+async function doLogin() {
+  const pass = document.getElementById('login-pass').value;
+  if (!pass) return;
+  const btn = document.getElementById('btn-signin');
+  const err = document.getElementById('login-err');
+  
+  btn.disabled = true;
+  btn.textContent = 'Verifying...';
+  err.textContent = '';
+  
+  try {
+    const hash = await hashString(pass);
+    const resp = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ hash })
+    });
+    
+    if (resp.ok) {
+      sessionStorage.setItem('sh_admin_hash', hash);
+      authHash = hash;
+      initAdmin();
+    } else {
+      err.textContent = 'Incorrect password. Please try again.';
+      document.getElementById('login-pass').value = '';
+    }
+  } catch (e) {
+    err.textContent = 'Error logging in. ' + e.message;
+  }
+  btn.disabled = false;
+  btn.textContent = 'Sign In';
+}
+
+function doLogout() {
+  sessionStorage.removeItem('sh_admin_hash');
+  location.reload();
+}
+
+function checkLogin() {
+  if (authHash) initAdmin();
+}
+
+function initAdmin() {
+  document.getElementById('login-screen').style.opacity = '0';
+  setTimeout(() => document.getElementById('login-screen').style.display = 'none', 300);
+  document.getElementById('admin-app').classList.add('visible');
+  loadHotels();
+}
+
+// ── API Fetcher ──
+async function apiCall(endpoint, method = 'GET', body = null) {
+  const opts = {
+    method,
+    headers: { 'Authorization': `Bearer ${authHash}` }
+  };
+  if (body) {
+    if (body instanceof FormData || body instanceof File) {
+      opts.body = body;
+    } else {
+      opts.headers['Content-Type'] = 'application/json';
+      opts.body = JSON.stringify(body);
+    }
+  }
+  const resp = await fetch(endpoint, opts);
+  const data = await resp.json();
+  if (!resp.ok) throw new Error(data.error || data.message || 'API Error');
+  return data;
+}
+
+// ── Load Hotels ──
+async function loadHotels() {
+  const grid = document.getElementById('hotels-grid');
+  grid.innerHTML = '<div class="loading-spinner">Loading hotels…</div>';
+  try {
+    // We can just use standard fetch to the database for GET since it's open for read if we use ANON KEY,
+    // but we can also just fetch from the public Supabase REST API directly to avoid backend trips.
+    const resp = await fetch(`${window.SUPABASE_URL}/rest/v1/hotels?select=*`, {
+      headers: { 'apikey': window.SUPABASE_ANON_KEY }
+    });
+    if (!resp.ok) throw new Error('Failed to fetch hotels');
+    const data = await resp.json();
+    
+    // Sort: manual_rank ascending (if exists), then rating descending
+    allHotels = data.sort((a, b) => {
+      if (a.manual_rank && b.manual_rank) return a.manual_rank - b.manual_rank;
+      if (a.manual_rank) return -1;
+      if (b.manual_rank) return 1;
+      return (b.rating || 0) - (a.rating || 0);
+    });
+    renderHotels();
+  } catch (err) {
+    grid.innerHTML = `<div class="loading-spinner">Error: ${err.message}</div>`;
+  }
+}
+
+function renderHotels() {
+  const grid = document.getElementById('hotels-grid');
+  if (!allHotels.length) {
+    grid.innerHTML = `<div class="empty-state">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+      <p>No hotels found in the database.</p></div>`;
+    return;
+  }
+  grid.innerHTML = allHotels.map(h => {
+    const img = h.images && h.images.length ? h.images[0] : '';
+    const stars = renderStars(h.rating);
+    return `<div class="hotel-card">
+      <div class="hotel-card-img">
+        ${img ? `<img src="${img}" alt="${h.name}" loading="lazy"/>` : `<div class="no-img"><span>No image</span></div>`}
+        ${!h.is_active ? '<div class="badge-inactive">INACTIVE</div>' : ''}
+        ${h.manual_rank ? `<div class="badge-rank">Rank #${h.manual_rank}</div>` : ''}
+      </div>
+      <div class="hotel-card-body">
+        <div class="hc-name">${h.name}</div>
+        <div class="hc-brand">${h.brand || ''}</div>
+        <div class="hc-meta">
+          <span class="hc-rating">${stars} ${parseFloat(h.rating||0).toFixed(1)}</span>
+        </div>
+        <div class="hc-dist">${h.location || ''}</div>
+        <div class="hc-actions">
+          <button class="btn-sm btn-edit" onclick="openEditModal('${h.id}')">&#x270E; Edit</button>
+          <button class="btn-sm btn-toggle ${h.is_active ? '' : 'inactive'}" onclick="toggleActive('${h.id}', ${h.is_active})">
+            ${h.is_active ? '&#x25CF; Active' : '&#x25CB; Inactive'}
+          </button>
+          <button class="btn-sm btn-del" onclick="deleteHotel('${h.id}', '${h.name.replace(/'/g,"\\'")}')">&times; Delete</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderStars(rating) {
+  return `<svg width="12" height="12" viewBox="0 0 24 24" fill="#f0c040" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+}
+
+// ── Add / Edit Form ──
+function slugify(text) { return text.toLowerCase().replace(/[^\w\s-]/g,'').replace(/[\s_]+/g,'-').replace(/^-+|-+$/g,''); }
+function updateSlugPreview() { document.getElementById('slug-preview').textContent = 'Slug: ' + slugify(document.getElementById('f-name').value); }
+function updateDescCount() {
+  const len = document.getElementById('f-desc').value.length;
+  document.getElementById('desc-count').textContent = `${len} / 500`;
+}
+function setRating(val) {
+  document.getElementById('f-rating-val').value = val;
+  const svgs = document.querySelectorAll('#f-rating svg');
+  svgs.forEach((svg, i) => svg.classList.toggle('active', i < val));
+}
+
+function validateMapsLink() {
+  const val = document.getElementById('f-maps').value.trim();
+  const err = document.getElementById('maps-err');
+  if (!val) { err.style.display = 'none'; return true; }
+  const valid = val.startsWith('https://maps.google.com') || val.startsWith('https://www.google.com/maps') || 
+                val.startsWith('https://goo.gl/maps') || val.startsWith('https://maps.app.goo.gl');
+  err.style.display = valid ? 'none' : 'block';
+  return valid;
+}
+
+// Amenities
+function handleAmenityKey(e) {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    const val = e.target.value.replace(/,/g,'').trim();
+    if (val) { addAmenity(val); e.target.value = ''; }
+  }
+}
+function addAmenity(val) {
+  if (!amenities.includes(val)) { amenities.push(val); renderAmenities(); }
+}
+function removeAmenity(idx) {
+  amenities.splice(idx, 1); renderAmenities();
+}
+function renderAmenities() {
+  const c = document.getElementById('amenity-tags-container');
+  const inp = document.getElementById('amenity-input');
+  c.innerHTML = '';
+  amenities.forEach((a, i) => {
+    const pill = document.createElement('span');
+    pill.className = 'tag-pill';
+    pill.innerHTML = `${a} <button type="button" onclick="removeAmenity(${i})">&#x2715;</button>`;
+    c.appendChild(pill);
+  });
+  c.appendChild(inp);
+}
+
+// Images
+function handleFileSelect(e) { processFiles(Array.from(e.target.files)); }
+function handleDrop(e) { e.preventDefault(); document.getElementById('upload-zone').classList.remove('dragover'); processFiles(Array.from(e.dataTransfer.files)); }
+function processFiles(files) {
+  const allowed = 4 - (uploadedUrls.length + pendingImages.length);
+  const toProcess = files.filter(f => f.type.startsWith('image/')).slice(0, allowed);
+  if (files.length > allowed) showToast(`Only 4 images allowed in total.`, 'error');
+  toProcess.forEach(f => {
+    const reader = new FileReader();
+    reader.onload = ev => { pendingImages.push({ file: f, previewUrl: ev.target.result }); renderPreviews(); };
+    reader.readAsDataURL(f);
+  });
+}
+function removeImage(idx, isUploaded) {
+  if (isUploaded) uploadedUrls.splice(idx, 1);
+  else pendingImages.splice(idx, 1);
+  renderPreviews();
+}
+function renderPreviews() {
+  const container = document.getElementById('img-previews');
+  const allPreviews = [
+    ...uploadedUrls.map((url, i) => ({ src: url, idx: i, uploaded: true })),
+    ...pendingImages.map((p, i) => ({ src: p.previewUrl, idx: i, uploaded: false }))
+  ];
+  container.innerHTML = allPreviews.map(p =>
+    `<div class="img-preview-item"><img src="${p.src}" alt="preview"/>
+      <button class="remove-img" onclick="removeImage(${p.idx}, ${p.uploaded})">&#x2715;</button>
+    </div>`
+  ).join('');
+}
+
+async function uploadAllImages(slug) {
+  if (!pendingImages.length) return [];
+  const progress = document.getElementById('upload-progress');
+  progress.style.display = 'block';
+  const urls = [];
+  for (let i = 0; i < pendingImages.length; i++) {
+    const { file } = pendingImages[i];
+    progress.textContent = `Uploading image ${i+1} of ${pendingImages.length}…`;
+    const ext = file.name.split('.').pop();
+    const path = `${slug}/${Date.now()}-${i}.${ext}`;
+    
+    // Upload via API
+    const resp = await fetch('/api/admin-upload?name=' + encodeURIComponent(path), {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${authHash}`,
+        'Content-Type': file.type
+      },
+      body: file // Send binary data directly
+    });
+    const data = await resp.json();
+    if (!resp.ok) { showToast('Upload failed: ' + data.error, 'error'); continue; }
+    urls.push(data.url);
+  }
+  progress.style.display = 'none';
+  return urls;
+}
+
+// Modal
+function openAddModal() {
+  editingHotelId = null;
+  amenities = []; pendingImages = []; uploadedUrls = [];
+  document.getElementById('modal-title').textContent = 'Add New Hotel';
+  document.getElementById('submit-btn').innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Save Hotel';
+  document.getElementById('edit-hotel-id').value = '';
+  ['f-name','f-brand','f-desc','f-location','f-dist','f-price','f-rank','f-maps'].forEach(id => document.getElementById(id).value = '');
+  setRating(5);
+  document.getElementById('f-active').value = 'true';
+  updateSlugPreview(); updateDescCount(); validateMapsLink();
+  renderAmenities(); renderPreviews();
+  document.getElementById('hotel-modal').classList.add('open');
+}
+
+function openEditModal(id) {
+  const h = allHotels.find(x => x.id === id);
+  if (!h) return;
+  editingHotelId = id;
+  amenities = Array.isArray(h.amenities) ? [...h.amenities] : [];
+  pendingImages = []; uploadedUrls = Array.isArray(h.images) ? [...h.images] : [];
+  document.getElementById('modal-title').textContent = 'Edit Hotel';
+  document.getElementById('submit-btn').innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Update Hotel';
+  document.getElementById('edit-hotel-id').value = id;
+  document.getElementById('f-name').value = h.name || '';
+  document.getElementById('f-brand').value = h.brand || '';
+  document.getElementById('f-desc').value = h.description || '';
+  document.getElementById('f-location').value = h.location || '';
+  document.getElementById('f-dist').value = h.distance_from_temple || '';
+  document.getElementById('f-price').value = h.price_per_night || '';
+  document.getElementById('f-rank').value = h.manual_rank || '';
+  document.getElementById('f-maps').value = h.maps_link || '';
+  setRating(Math.round(h.rating || 5));
+  document.getElementById('f-active').value = String(h.is_active !== false);
+  document.getElementById('slug-preview').textContent = 'Slug: ' + (h.slug || '');
+  updateDescCount(); validateMapsLink();
+  renderAmenities(); renderPreviews();
+  document.getElementById('hotel-modal').classList.add('open');
+}
+
+function closeHotelModal() { document.getElementById('hotel-modal').classList.remove('open'); }
+function closeModalOnOverlay(e) { if (e.target === document.getElementById('hotel-modal')) closeHotelModal(); }
+
+// ── Submit ──
+async function submitHotel() {
+  const btn = document.getElementById('submit-btn');
+  const name = document.getElementById('f-name').value.trim();
+  const desc = document.getElementById('f-desc').value.trim();
+  const price = parseInt(document.getElementById('f-price').value) || 0;
+  
+  if (!name || !desc || !price) { showToast('Please fill Name, Description, and Price', 'error'); return; }
+  if (desc.length > 500) { showToast('Description cannot exceed 500 characters', 'error'); return; }
+  if (!validateMapsLink()) { showToast('Invalid Google Maps link', 'error'); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '…Saving';
+
+  const slug = editingHotelId
+    ? allHotels.find(h => h.id === editingHotelId)?.slug || slugify(name)
+    : slugify(name);
+
+  const newUrls = await uploadAllImages(slug);
+  const allImageUrls = [...uploadedUrls, ...newUrls].slice(0, 4);
+
+  const payload = {
+    name,
+    brand: document.getElementById('f-brand').value.trim(),
+    description: desc,
+    location: document.getElementById('f-location').value.trim(),
+    distance_from_temple: document.getElementById('f-dist').value.trim(),
+    price_per_night: price,
+    rating: parseInt(document.getElementById('f-rating-val').value),
+    manual_rank: document.getElementById('f-rank').value ? parseInt(document.getElementById('f-rank').value) : null,
+    maps_link: document.getElementById('f-maps').value.trim(),
+    amenities: amenities,
+    images: allImageUrls,
+    is_active: document.getElementById('f-active').value === 'true'
+  };
+
+  try {
+    if (editingHotelId) {
+      payload.id = editingHotelId;
+      await apiCall('/api/admin-hotels', 'PUT', payload);
+    } else {
+      payload.slug = slug;
+      await apiCall('/api/admin-hotels', 'POST', payload);
+    }
+    showToast(editingHotelId ? 'Hotel updated!' : 'Hotel added!', 'success');
+    closeHotelModal();
+    loadHotels();
+  } catch(e) {
+    showToast(e.message, 'error');
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Save Hotel';
+}
+
+// ── Delete ──
+async function deleteHotel(id, name) {
+  if (!confirm(`Are you sure you want to delete "${name}"?\nThis cannot be undone.`)) return;
+  try {
+    await apiCall(`/api/admin-hotels?id=${id}`, 'DELETE');
+    showToast('Hotel deleted', 'info');
+    loadHotels();
+  } catch(e) {
+    showToast('Delete failed: ' + e.message, 'error');
+  }
+}
+
+// ── Toggle Active ──
+async function toggleActive(id, current) {
+  try {
+    await apiCall('/api/admin-hotels', 'PATCH', { id, is_active: !current });
+    showToast(!current ? 'Hotel is now Active' : 'Hotel is now Inactive', 'info');
+    loadHotels();
+  } catch(e) {
+    showToast('Error: ' + e.message, 'error');
+  }
+}
+
+// Toast
+function showToast(msg, type = 'info') {
+  const wrap = document.getElementById('toast-wrap');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  wrap.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .3s'; setTimeout(() => t.remove(), 300); }, 3500);
+}
+
+checkLogin();
+</script>
+</body>
+</html>
