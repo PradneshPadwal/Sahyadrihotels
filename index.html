@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -888,7 +888,7 @@
             <p class="card-brand">Rudrya Hospitality</p>
             <div class="card-amenities"><span class="card-amenity">Free Wi-Fi</span><span class="card-amenity">Parking</span><span class="card-amenity">Hot Water</span></div>
             <div class="card-footer">
-              <div class="card-price">G�2,499 <span>/ night</span></div>
+              <div class="card-price">₹2,499 <span>/ night</span></div>
             </div>
           </div>
         </div>
@@ -906,7 +906,7 @@
             <p class="card-brand">Rudrya Hospitality</p>
             <div class="card-amenities"><span class="card-amenity">Parking</span><span class="card-amenity">Restaurant</span><span class="card-amenity">Family Rooms</span></div>
             <div class="card-footer">
-              <div class="card-price">G�3,499 <span>/ night</span></div>
+              <div class="card-price">₹3,499 <span>/ night</span></div>
             </div>
           </div>
         </div>
@@ -924,7 +924,7 @@
             <p class="card-brand">Sahyadri Forest Stays</p>
             <div class="card-amenities"><span class="card-amenity">Parking</span><span class="card-amenity">Forest View</span><span class="card-amenity">Hot Water</span></div>
             <div class="card-footer">
-              <div class="card-price">G�2,999 <span>/ night</span></div>
+              <div class="card-price">₹2,999 <span>/ night</span></div>
             </div>
           </div>
         </div>
@@ -942,7 +942,7 @@
             <p class="card-brand">Sahyadri Forest Stays</p>
             <div class="card-amenities"><span class="card-amenity">Private Balcony</span><span class="card-amenity">2 Bedrooms</span><span class="card-amenity">Mountain View</span></div>
             <div class="card-footer">
-              <div class="card-price">G�8,500 <span>/ night</span></div>
+              <div class="card-price">₹8,500 <span>/ night</span></div>
             </div>
           </div>
         </div>
@@ -960,7 +960,7 @@
             <p class="card-brand">Heritage Retreats</p>
             <div class="card-amenities"><span class="card-amenity">Breakfast Incl.</span><span class="card-amenity">Sacred Vibes</span><span class="card-amenity">Garden</span></div>
             <div class="card-footer">
-              <div class="card-price">G�4,200 <span>/ night</span></div>
+              <div class="card-price">₹4,200 <span>/ night</span></div>
             </div>
           </div>
         </div>
@@ -969,7 +969,21 @@
           <div class="card-img-wrap">
             <img src="hotel6.png" alt="The Misty Sanctuary" loading="lazy" />
             <button class="card-wish-btn" type="button" aria-label="Add to wishlist" onclick="toggleWish(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-          </div></section>
+          </div>
+          <div class="card-body">
+            <div class="card-top-row">
+              <div class="card-distance"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>5.1 km from Temple</div>
+            </div>
+            <h3 class="card-name">The Misty Sanctuary</h3>
+            <p class="card-brand">Eco Forest Stays</p>
+            <div class="card-amenities"><span class="card-amenity">Eco Resort</span><span class="card-amenity">Spa &amp; Wellness</span><span class="card-amenity">Forest View</span></div>
+            <div class="card-footer">
+              <div class="card-price">₹3,500 <span>/ night</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- SECTION 3: MAP + LIST -->
     
@@ -1351,8 +1365,7 @@
       prepareSlides();
       loadHotels();
     });
-  
-    /* -- DYNAMIC HOTELS ------------------------------- */
+      /* ── DYNAMIC HOTELS ─────────────────────────────── */
     async function loadHotels() {
       if (!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY) {
         console.error('Supabase configuration missing');
@@ -1376,8 +1389,8 @@
         const grid = document.getElementById('stays-grid');
         grid.insertAdjacentHTML("beforeend", hotels.map((h, i) => {
           const img = h.images && h.images.length > 0 ? h.images[0] : '';
-          const delay = (i % 3) + 1; // 1, 2, or 3
-          const price = h.price_per_night ? '?' + h.price_per_night.toLocaleString('en-IN') : 'Contact for price';
+          const delay = (i % 3) + 1;
+          const price = h.price_per_night ? '₹' + h.price_per_night.toLocaleString('en-IN') : 'Contact for price';
           
           let amenitiesHtml = '';
           if (h.amenities && h.amenities.length) {
@@ -1406,7 +1419,7 @@
         }).join(''));
       } catch(e) {
         console.error(e);
-        document.getElementById('stays-grid').innerHTML = `<p style="color:#aaa; grid-column:1/-1;">Could not load hotels. Please try again later.</p>`;
+        document.getElementById('stays-grid').insertAdjacentHTML("beforeend", `<p style="color:#aaa; grid-column:1/-1;">Could not load dynamic hotels.</p>`);
       }
     }
   </script>
