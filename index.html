@@ -202,6 +202,7 @@
     .card-img-wrap{ position: relative; height: 240px; overflow: hidden; }
     .card-img-wrap img{ width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
     .stay-card:hover .card-img-wrap img{ transform: scale(1.06); }
+    .card-img-placeholder{ width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #e8f2ec; color: var(--accent-green); font-size: .85rem; font-weight: 600; }
 
     .card-wish-btn{ position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,.92); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s, transform .2s; z-index: 2; }
     .card-wish-btn:hover{ background: #fff; transform: scale(1.1); }
@@ -880,10 +881,10 @@
           <p class="stays-label">All Stays</p>
           <h2 class="stays-title">Available Stays</h2>
         </div>
-        <p class="stays-count-badge">6 stays available near temple</p>
+        <p class="stays-count-badge" id="stays-count-badge">6 stays available near temple</p>
       </div>
 
-      <div class="stays-grid">
+      <div class="stays-grid" id="stays-grid">
         <!-- Card 1 -->
         <div class="stay-card reveal reveal-delay-1" onclick="window.location.href='hotel-rudrya-forest.html'" style="cursor:pointer;">
           <div class="card-img-wrap">
@@ -1127,6 +1128,7 @@
     </div>
   </div>
 
+  <script src="/api/config"></script>
   <script>
     /* ── HERO CAROUSEL ─────────────────────────────── */
     const HERO_INTERVAL = 4000;
@@ -1255,6 +1257,82 @@
 
     /* ── WISHLIST ────────────────────────────────────── */
     function toggleWish(btn) { btn.classList.toggle('active'); }
+
+    /* ── SUPABASE STAYS ──────────────────────────────── */
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, ch => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[ch]));
+    }
+
+    function safeImageUrl(value) {
+      try {
+        const url = new URL(value, window.location.origin);
+        return url.protocol === 'https:' || url.protocol === 'http:' ? url.href : '';
+      } catch {
+        return '';
+      }
+    }
+
+    function getHotelImage(hotel) {
+      if (Array.isArray(hotel.images) && hotel.images.length) return safeImageUrl(hotel.images[0]);
+      return '';
+    }
+
+    function renderStayCard(hotel, index) {
+      const img = getHotelImage(hotel);
+      const name = escapeHtml(hotel.name || 'Untitled stay');
+      const brand = escapeHtml(hotel.brand || 'Sahyadri Hotels');
+      const distance = escapeHtml(hotel.distance_from_temple || 'Near Temple');
+      const amenities = Array.isArray(hotel.amenities) ? hotel.amenities.slice(0, 3) : [];
+      const price = Number(hotel.price_per_night || 0);
+      const slug = encodeURIComponent(hotel.slug || '');
+      const delay = (index % 3) + 1;
+      const href = slug ? `hotel.html?slug=${slug}` : '#section-stays';
+      const amenitiesHtml = amenities.length
+        ? amenities.map(a => `<span class="card-amenity">${escapeHtml(a)}</span>`).join('')
+        : '<span class="card-amenity">Contact for details</span>';
+
+      return `<div class="stay-card reveal reveal-delay-${delay}" onclick="window.location.href='${href}'" style="cursor:pointer;">
+        <div class="card-img-wrap">
+          ${img ? `<img src="${escapeHtml(img)}" alt="${name}" loading="lazy" />` : '<div class="card-img-placeholder">No image</div>'}
+          <button class="card-wish-btn" type="button" aria-label="Add to wishlist" onclick="event.stopPropagation(); toggleWish(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+        <div class="card-body">
+          <div class="card-top-row">
+            <div class="card-distance"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${distance}</div>
+          </div>
+          <h3 class="card-name">${name}</h3>
+          <p class="card-brand">${brand}</p>
+          <div class="card-amenities">${amenitiesHtml}</div>
+          <div class="card-footer">
+            <div class="card-price">${price > 0 ? `₹${price.toLocaleString('en-IN')}` : 'Contact'} <span>/ night</span></div>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    async function loadSupabaseStays() {
+      if (!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY) return;
+      try {
+        const url = `${window.SUPABASE_URL}/rest/v1/hotels?is_active=eq.true&select=*&order=manual_rank.asc.nullslast,rating.desc`;
+        const resp = await fetch(url, { headers: { apikey: window.SUPABASE_ANON_KEY } });
+        if (!resp.ok) throw new Error('Could not load stays');
+        const hotels = await resp.json();
+        if (!Array.isArray(hotels) || hotels.length === 0) return;
+
+        document.getElementById('stays-grid').innerHTML = hotels.map(renderStayCard).join('');
+        document.getElementById('stays-count-badge').textContent =
+          hotels.length === 1 ? '1 stay available near temple' : `${hotels.length} stays available near temple`;
+        document.querySelectorAll('#stays-grid .reveal').forEach(el => ro.observe(el));
+      } catch (err) {
+        console.warn('Using fallback static stays:', err);
+      }
+    }
 
     /* ── FILTER CHIPS ───────────────────────────────── */
     function setFilter(chip) {
@@ -1405,6 +1483,7 @@
       document.getElementById('intro-bg').style.transform = 'scale(1)';
       initBookingDates();
       prepareSlides();
+      loadSupabaseStays();
     });
   </script>
 </body>
