@@ -1371,7 +1371,7 @@
           return (b.rating || 0) - (a.rating || 0);
         });
 
-        document.getElementById('stays-count-badge').textContent = `${${(hotels.length + 6)} stays available near temple`;
+        document.getElementById('stays-count-badge').textContent = `${hotels.length + 6} stays available near temple`;
         
         const grid = document.getElementById('stays-grid');
         grid.insertAdjacentHTML("beforeend", hotels.map((h, i) => {
