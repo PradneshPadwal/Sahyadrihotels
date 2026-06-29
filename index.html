@@ -873,7 +873,9 @@
         <p class="stays-count-badge" id="stays-count-badge">Loading stays...</p>
       </div>
 
-      <div class="stays-grid" id="stays-grid"></div></section>
+      <div class="stays-grid" id="stays-grid">
+
+</div></section>
 
     <!-- SECTION 3: MAP + LIST -->
     
@@ -1275,10 +1277,10 @@
           return (b.rating || 0) - (a.rating || 0);
         });
 
-        document.getElementById('stays-count-badge').textContent = `${hotels.length} stays available near temple`;
+        document.getElementById('stays-count-badge').textContent = `${${(hotels.length + 6)} stays available near temple`;
         
         const grid = document.getElementById('stays-grid');
-        grid.innerHTML = hotels.map((h, i) => {
+        grid.insertAdjacentHTML("beforeend", hotels.map((h, i) => {
           const img = h.images && h.images.length > 0 ? h.images[0] : '';
           const delay = (i % 3) + 1; // 1, 2, or 3
           const price = h.price_per_night ? '?' + h.price_per_night.toLocaleString('en-IN') : 'Contact for price';
