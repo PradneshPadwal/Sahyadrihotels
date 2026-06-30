@@ -719,6 +719,148 @@
         .about-card h3 { font-size: 1rem; left: 0.5rem; bottom: 0.5rem; }
         .about-pagination { right: 1.5rem; bottom: 1rem; }
       }
+      /* CONTACT */
+      .contact-section {
+        background: var(--cream);
+        color: var(--dark-text);
+        padding: 5rem 3.5rem;
+      }
+      .contact-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: minmax(0, 0.95fr) minmax(320px, 1.05fr);
+        gap: 3rem;
+        align-items: start;
+      }
+      .contact-kicker {
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: .7rem;
+      }
+      .contact-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(2.2rem, 4vw, 4rem);
+        font-weight: 500;
+        line-height: 1.05;
+        color: var(--dark-text);
+        margin-bottom: 1rem;
+      }
+      .contact-copy {
+        font-size: 1rem;
+        line-height: 1.75;
+        color: var(--mid-text);
+        max-width: 560px;
+        margin-bottom: 2rem;
+      }
+      .contact-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .85rem;
+      }
+      .contact-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: .8rem 1.2rem;
+        border-radius: 10px;
+        border: 1.5px solid var(--accent-green);
+        color: var(--accent-green);
+        text-decoration: none;
+        font-size: .78rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        transition: all .2s ease;
+      }
+      .contact-action.primary {
+        background: var(--accent-green);
+        color: #fff;
+      }
+      .contact-action:hover {
+        transform: translateY(-1px);
+        background: #1d3d2e;
+        color: #fff;
+      }
+      .contact-panel {
+        background: #fff;
+        border: 1px solid rgba(0,0,0,.08);
+        border-radius: 16px;
+        padding: 1.6rem;
+        box-shadow: 0 14px 36px rgba(0,0,0,.08);
+      }
+      .contact-list {
+        display: grid;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .contact-item {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        gap: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(0,0,0,.07);
+      }
+      .contact-item:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+      .contact-label {
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: var(--gold);
+      }
+      .contact-value,
+      .contact-value a {
+        color: var(--dark-text);
+        text-decoration: none;
+        font-size: .94rem;
+        line-height: 1.55;
+      }
+      .contact-value a:hover {
+        color: var(--accent-green);
+      }
+      .contact-services {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: .65rem;
+        margin-top: 1.25rem;
+      }
+      .contact-service {
+        background: var(--cream);
+        border: 1px solid rgba(46,85,64,.12);
+        border-radius: 10px;
+        padding: .75rem .85rem;
+        color: var(--accent-green);
+        font-size: .8rem;
+        font-weight: 600;
+      }
+      .contact-note {
+        margin-top: 1.4rem;
+        padding-top: 1.2rem;
+        border-top: 1px solid rgba(0,0,0,.08);
+        color: var(--mid-text);
+        font-size: .9rem;
+        line-height: 1.6;
+      }
+      @media (max-width: 900px) {
+        .contact-section { padding: 4rem 1.5rem; }
+        .contact-inner { grid-template-columns: 1fr; gap: 2rem; }
+      }
+      @media (max-width: 560px) {
+        .contact-section { padding: 3.2rem 1.1rem; }
+        .contact-panel { padding: 1.2rem; border-radius: 12px; }
+        .contact-item { grid-template-columns: 1fr; gap: .35rem; }
+        .contact-services { grid-template-columns: 1fr; }
+        .contact-actions { flex-direction: column; }
+        .contact-action { width: 100%; }
+      }
 </style>
 </head>
 <body>
@@ -775,7 +917,7 @@
             <li><a href="#section-about">Experiences</a></li>
             <li><a href="#section-about">Gallery</a></li>
             <li><a href="#section-about">About Us</a></li>
-            <li><a href="#site-footer">Contact</a></li>
+            <li><a href="#section-contact">Contact</a></li>
           </ul>
           <div class="nav-right-cluster">
             <a href="#section-stays" class="btn-book-now">Book Now</a>
@@ -1037,13 +1179,75 @@
         <span class="page-current">01</span> <span class="page-total">/ 04</span>
       </div>
     </section>
+    <!-- CONTACT -->
+    <section class="contact-section" id="section-contact">
+      <div class="contact-inner">
+        <div class="contact-intro reveal">
+          <p class="contact-kicker">Contact Us</p>
+          <h2 class="contact-title">Sahyadri Hospitality</h2>
+          <p class="contact-copy">
+            Your trusted partner for hotel bookings and hospitality solutions. We provide seamless booking support for guests and long-term partnership support for hotels and resorts.
+          </p>
+          <div class="contact-actions">
+            <a class="contact-action primary" href="tel:+919322273478">Call Support</a>
+            <a class="contact-action" href="mailto:official.sahyadrihospitality@gmail.com">Email Us</a>
+            <a class="contact-action" href="terms.html">Terms &amp; Policies</a>
+          </div>
+        </div>
+
+        <div class="contact-panel reveal reveal-delay-1">
+          <div class="contact-list">
+            <div class="contact-item">
+              <div class="contact-label">Phone</div>
+              <div class="contact-value">
+                <a href="tel:+919322273478">+91 93222 73478</a><br />
+                <a href="tel:+918625050625">+91 86250 50625</a>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-label">Email</div>
+              <div class="contact-value"><a href="mailto:official.sahyadrihospitality@gmail.com">official.sahyadrihospitality@gmail.com</a></div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-label">Website</div>
+              <div class="contact-value"><a href="https://www.bhimashankarhotel.com">www.bhimashankarhotel.com</a></div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-label">Address</div>
+              <div class="contact-value">Rajgurunagar, Khed, Maharashtra - 410505<br />India</div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-label">Hours</div>
+              <div class="contact-value">24 hours a day, 7 days a week<br />365 days customer support</div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-label">Instagram</div>
+              <div class="contact-value">@sahyadrihospitality</div>
+            </div>
+          </div>
+
+          <div class="contact-services">
+            <div class="contact-service">Hotel Bookings</div>
+            <div class="contact-service">Hotel Partnership Enquiries</div>
+            <div class="contact-service">Customer Support</div>
+            <div class="contact-service">Business Collaborations</div>
+            <div class="contact-service">Booking Modifications</div>
+            <div class="contact-service">Guest Assistance</div>
+          </div>
+
+          <p class="contact-note">
+            Trusted hotel booking support, dedicated hotel partnership assistance, and professional service focused on helping hotels reach more guests. Sahyadri Hospitality: elevating hospitality, expanding opportunities, and connecting stays with lasting memories.
+          </p>
+        </div>
+      </div>
+    </section>
     <!-- FOOTER -->
     <footer class="site-footer" id="site-footer">
       <span>© 2026 <strong>Sahyadri Hotels</strong>. Serene, Trustworthy, Grounded.</span>
       <div class="footer-links">
-        <a href="https://wa.me/919322273478">Support</a>
-        <a href="mailto:support@bhimashankarhotel.com">Privacy</a>
-        <a href="mailto:support@bhimashankarhotel.com">Terms</a>
+        <a href="#section-contact">Support</a>
+        <a href="terms.html">Terms</a>
+        <a href="terms.html#hotel-unavailability">Hotel Policy</a>
       </div>
     </footer>
 
@@ -1057,7 +1261,7 @@
       <a href="#section-about">Experiences</a>
       <a href="#section-about">Gallery</a>
       <a href="#section-about">About Us</a>
-      <a href="#site-footer">Contact</a>
+      <a href="#section-contact">Contact</a>
     </nav>
   </div>
 
