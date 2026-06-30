@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -719,11 +719,34 @@
         .about-card h3 { font-size: 1rem; left: 0.5rem; bottom: 0.5rem; }
         .about-pagination { right: 1.5rem; bottom: 1rem; }
       }
-      /* CONTACT */
+   /* CONTACT */
       .contact-section {
+        position: relative;
         background: var(--cream);
         color: var(--dark-text);
         padding: 5rem 3.5rem;
+        overflow: hidden;
+      }
+      .contact-bg-photo {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .contact-bg-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.65;
+      }
+      .contact-bg-photo::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, var(--cream) 0%, rgba(245,238,227,0.55) 35%, var(--cream) 100%);
+      }
+      .contact-inner {
+        position: relative;
+        z-index: 1;
       }
       .contact-inner {
         max-width: 1280px;
@@ -1180,7 +1203,15 @@
       </div>
     </section>
     <!-- CONTACT -->
-    <section class="contact-section" id="section-contact">
+<section class="contact-section" id="section-contact">
+      <div class="contact-bg-photo">
+        <picture>
+          <source media="(max-width: 760px)" srcset="conmob.png" />
+          <source media="(min-width: 761px)" srcset="conpc.png" />
+          <img src="conpc.png" alt="" loading="lazy" />
+        </picture>
+      </div>
+</parameter>
       <div class="contact-inner">
         <div class="contact-intro reveal">
           <p class="contact-kicker">Contact Us</p>
