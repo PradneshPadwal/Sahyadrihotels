@@ -435,13 +435,7 @@ async function loadHotels() {
   const grid = document.getElementById('hotels-grid');
   grid.innerHTML = '<div class="loading-spinner">Loading hotels…</div>';
   try {
-    // We can just use standard fetch to the database for GET since it's open for read if we use ANON KEY,
-    // but we can also just fetch from the public Supabase REST API directly to avoid backend trips.
-    const resp = await fetch(`${window.SUPABASE_URL}/rest/v1/hotels?select=*`, {
-      headers: { 'apikey': window.SUPABASE_ANON_KEY }
-    });
-    if (!resp.ok) throw new Error('Failed to fetch hotels');
-    const data = await resp.json();
+    const data = await apiCall('/api/admin-hotels');
     
     // Sort: manual_rank ascending (if exists), then rating descending
     allHotels = data.sort((a, b) => {

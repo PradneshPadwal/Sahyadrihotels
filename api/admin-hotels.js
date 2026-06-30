@@ -45,7 +45,16 @@ module.exports = async function(req, res) {
   };
 
   try {
-    if (req.method === 'POST') {
+    if (req.method === 'GET') {
+      const resp = await fetch(`${supabaseUrl}/rest/v1/hotels?select=*&order=manual_rank.asc.nullslast,rating.desc`, {
+        method: 'GET',
+        headers
+      });
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.message || JSON.stringify(data));
+      return res.status(200).json(data);
+    }
+    else if (req.method === 'POST') {
       const payload = cleanHotelPayload(req.body);
       if (!payload.name || !payload.slug) return res.status(400).json({ error: 'Name and slug are required' });
       const resp = await fetch(`${supabaseUrl}/rest/v1/hotels`, {
@@ -84,7 +93,7 @@ module.exports = async function(req, res) {
       return res.status(200).json({ success: true });
     }
     else {
-      res.setHeader('Allow', 'POST, PUT, PATCH, DELETE');
+      res.setHeader('Allow', 'GET, POST, PUT, PATCH, DELETE');
       res.status(405).json({ error: 'Method not allowed' });
     }
   } catch (err) {
